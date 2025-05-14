@@ -544,6 +544,9 @@ do_things() {
     # Make the kernel calling debing
     debing
 
+    # Install compiled kernel
+    sudo dpkg -i custom-kernel-$_kv_name-$_kv_name-1 custom-kernel-headers-$_kv_name-$_kv_name-1
+
     # Create boot image and update grub
     sudo update-initramfs -c -k $_kv_name
     sudo update-grub2
@@ -602,7 +605,7 @@ while :; do
         "8" "Configure LRU" \
         "9" "Configure Hugepages" \
         "10" "Configure System Optimizations" \
-        "11" "COMPILE KERNEL" \
+        "11" "COMPILE AND INSTALL KERNEL" \
         "12" "Exit" 3>&1 1>&2 2>&3)
 
     exitstatus=$?
