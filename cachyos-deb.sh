@@ -544,6 +544,10 @@ do_things() {
     # Make the kernel calling debing
     debing
 
+    # Create boot image and update grub
+    sudo update-initramfs -c -k $_kv_name
+    sudo update-grub2
+
 }
 
 # check if any argument was passed
