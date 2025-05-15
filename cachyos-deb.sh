@@ -138,9 +138,11 @@ configure_cachyos() {
 configure_cpusched() {
     # Show radiolist and capture user selection
     _cpusched_selection=$(whiptail --title "CPU Scheduler Configuration" --radiolist \
-        "Choose CPU Scheduler (use space to select):" 15 60 3 \
-        "cachyos" "Enable CachyOS CPU scheduler" $([ "$_cpusched_selection" = "cachyos" ] && echo "ON" || echo "OFF") \
-        "pds" "Enable PDS CPU scheduler" $([ "$_cpusched_selection" = "pds" ] && echo "ON" || echo "OFF") \
+        "Choose CPU Scheduler (use space to select):" 20 70 5 \
+        "cachyos" "Default BORE + SCHED-EXT scheduler" $([ "$_cpusched_selection" = "cachyos" ] && echo "ON" || echo "OFF") \
+        "pds" "PDS CPU scheduler" $([ "$_cpusched_selection" = "pds" ] && echo "ON" || echo "OFF") \
+        "sched-ext" "SCHED-EXT CPU scheduler" $([ "$_cpusched_selection" = "sched-ext" ] && echo "ON" || echo "OFF") \
+        "rt-bore" "Real-time preemption with BORE scheduler" $([ "$_cpusched_selection" = "rt-bore" ] && echo "ON" || echo "OFF") \
         "none" "Do not configure CPU scheduler" $([ "$_cpusched_selection" = "none" ] && echo "ON" || echo "OFF") \
         3>&1 1>&2 2>&3)
 }
