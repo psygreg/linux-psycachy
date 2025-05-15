@@ -553,6 +553,41 @@ do_things() {
 
 }
 
+# Write settings to file on first installation
+first_install () {
+
+    do_things
+    {   
+        echo "_cachyos_config=${_cachyos_config}"
+        echo "_cpusched_selection=${_cpusched_selection}"
+        echo "_llvm_lto_selection=${_llvm_lto_selection}"
+        echo "_tick_rate=${_tick_rate}"
+        echo "_numa=${_numa}"
+        echo "_hugepage=${_hugepage}"
+        echo "_lru_config=${_lru_config}"
+        echo "_o3_optimization=${_o3_optimization}"
+        echo "_performance_governor=${_performance_governor}"
+        echo "_nr_cpus=${_nr_cpus}"
+        echo "_bbr3=${_bbr3}"
+        echo "_march=${_march}"
+        echo "_preempt=${_preempt}"
+        echo "_tick_type=${nohz_full}"
+    } > $HOME/.local/kernelsetting
+
+}
+
+# Source settings from existing file for updates
+kernel_upd () {
+
+    if [ -f "$HOME/.local/kernelsetting" ]; then
+        source $HOME/.local/kernelsetting
+        do_things
+    else
+        whiptail --title "Update failed." --msgbox "Settings file missing. Did you install linux-cachyos previously?" 8 78
+    fi
+
+}
+
 # check if any argument was passed
 
 if [ -n "$1" ]; then
@@ -606,7 +641,8 @@ while :; do
         "9" "Configure Hugepages" \
         "10" "Configure System Optimizations" \
         "11" "COMPILE AND INSTALL KERNEL" \
-        "12" "Exit" 3>&1 1>&2 2>&3)
+        "12" "UPDATE PREVIOUSLY INSTALLED KERNEL" \
+        "13" "Exit" 3>&1 1>&2 2>&3)
 
     exitstatus=$?
     if [ $exitstatus != 0 ]; then
@@ -626,8 +662,9 @@ while :; do
     8) configure_lru ;;
     9) configure_hugepages ;;
     10) configure_system_optimizations ;;
-    11) do_things ;;
-    12 | q) break ;;
+    11) first_install ;;
+    12) kernel_upd ;;
+    13 | q) break ;;
     *) echo "Invalid Option" ;;
     esac
 done
