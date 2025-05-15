@@ -571,7 +571,7 @@ first_install () {
         echo "_bbr3=${_bbr3}"
         echo "_march=${_march}"
         echo "_preempt=${_preempt}"
-        echo "_tick_type=${nohz_full}"
+        echo "_tick_type=${_tick_type}"
     } > $HOME/.local/kernelsetting
 
 }
@@ -641,7 +641,7 @@ while :; do
         "9" "Configure Hugepages" \
         "10" "Configure System Optimizations" \
         "11" "COMPILE AND INSTALL KERNEL" \
-        "12" "UPDATE PREVIOUSLY INSTALLED KERNEL" \
+        "12" "UPDATE KERNEL" \
         "13" "Exit" 3>&1 1>&2 2>&3)
 
     exitstatus=$?
