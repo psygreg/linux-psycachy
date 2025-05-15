@@ -583,7 +583,7 @@ kernel_upd () {
         source $HOME/.local/kernelsetting
         do_things
     else
-        whiptail --title "Update failed." --msgbox "Settings file missing. Did you install linux-cachyos previously?" 8 78
+        whiptail --title "Update failed." --msgbox "Settings file missing. Did you install this kernel previously?" 8 78
     fi
 
 }
