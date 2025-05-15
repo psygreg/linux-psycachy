@@ -21,7 +21,7 @@ _tick_type="nohz_full"
 check_deps() {
 
     # List of dependencies to check
-    dependencies=(git libncurses-dev curl gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf llvm bc rsync)
+    dependencies=(whiptail gcc git libncurses-dev curl gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf llvm bc rsync)
 
     # Iterate over dependencies and check each one
     for dep in "${dependencies[@]}"; do
