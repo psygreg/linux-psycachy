@@ -5,7 +5,7 @@
 # Initialize variables to store user choices
 _cachyos_config="CACHYOS"
 _cpusched_selection="cachyos"
-_llvm_lto_selection="none"
+_llvm_lto_selection="thin"
 _tick_rate="500"
 _numa="enable"
 _hugepage="always"
