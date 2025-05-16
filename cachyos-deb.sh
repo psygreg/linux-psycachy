@@ -547,7 +547,7 @@ do_things() {
     debing
 
     # Install compiled kernel
-    sudo dpkg -i linux-$_kv_name/custom-kernel-$_kv_name-$_kv_name-1.deb custom-kernel-headers-$_kv_name-$_kv_name-1.deb
+    sudo dpkg -i linux-$_kv_name/custom-kernel-$_kv_name-$_kv_name-1.deb linux-$_kv_name/custom-kernel-headers-$_kv_name-$_kv_name-1.deb
 
     # Create boot image and update grub
     sudo update-initramfs -c -k $_kv_name
