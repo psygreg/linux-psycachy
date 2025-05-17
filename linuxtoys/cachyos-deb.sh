@@ -547,7 +547,7 @@ do_things() {
     debing
 
     # Install compiled kernel
-    sudo dpkg -i $HOME/linux-$_kv_name/custom-kernel-$_kv_name-$_kv_name-1.deb $HOME/linux-$_kv_name/custom-kernel-headers-$_kv_name-$_kv_name-1.deb
+    sudo dpkg -i linux-$_kv_name/custom-kernel-$_kv_name-$_kv_name-1.deb linux-$_kv_name/custom-kernel-headers-$_kv_name-$_kv_name-1.deb
 
     # Create boot image and update grub
     sudo update-initramfs -c -k $_kv_name
@@ -578,8 +578,6 @@ first_install () {
         echo "_preempt=${_preempt}"
         echo "_tick_type=${_tick_type}"
     } > $HOME/.local/kernelsetting
-    cd ..
-    rm -rf cachyos-deb
 
 }
 
@@ -676,7 +674,9 @@ while :; do
     10) configure_system_optimizations ;;
     11) first_install ;;
     12) kernel_upd ;;
-    13 | q) break ;;
+    13 | q) cd $HOME
+            rm -rf cachyos-deb
+            break ;;
     *) echo "Invalid Option" ;;
     esac
 done
