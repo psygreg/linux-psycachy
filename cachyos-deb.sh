@@ -558,6 +558,9 @@ do_things() {
 # Write settings to file on first installation
 first_install () {
 
+    cd $HOME
+    mkdir cachyos-deb
+    cd cachyos-deb
     do_things
     {   
         echo "_cachyos_config=${_cachyos_config}"
@@ -575,6 +578,8 @@ first_install () {
         echo "_preempt=${_preempt}"
         echo "_tick_type=${_tick_type}"
     } > $HOME/.local/kernelsetting
+    cd ..
+    rm -rf cachyos-deb
 
 }
 
@@ -583,7 +588,12 @@ kernel_upd () {
 
     if [ -f "$HOME/.local/kernelsetting" ]; then
         source $HOME/.local/kernelsetting
+        cd $HOME
+        mkdir cachyos-deb
+        cd cachyos-deb
         do_things
+        cd ..
+        rm -rf cachyos-deb
     else
         whiptail --title "Update failed." --msgbox "Settings file missing. Did you install this kernel previously?" 8 78
     fi
