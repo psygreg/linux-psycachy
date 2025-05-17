@@ -448,7 +448,7 @@ do_things() {
             linux-cachyos-rt.install) ;;
     rt-bore) ## RT with BORE Scheduler
         patches+=("${_patchsource}/misc/0001-rt-i915.patch"
-            "${_patchsource}/sched/0001-bore-cachy-rt.patch"
+            "${_patchsource}/sched/0001-bore.patch"
             linux-cachyos-rt.install) ;;
     esac
 
