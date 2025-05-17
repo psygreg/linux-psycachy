@@ -441,21 +441,16 @@ do_things() {
     ## List of CachyOS schedulers
     case "$_cpusched_selection" in
     cachyos) # CachyOS Scheduler (BORE + SCHED-EXT)
-        patches+=("${_patchsource}/sched/0001-sched-ext.patch") ;;
-    bore) ## BORE Scheduler
         patches+=("${_patchsource}/sched/0001-bore-cachy.patch") ;;
+    bore) ## BORE Scheduler
+        patches+=("${_patchsource}/sched/0001-bore.patch") ;;
     rt) ## EEVDF with RT patches
-        patches+=("${_patchsource}/misc/0001-rt.patch"
+        patches+=("${_patchsource}/misc/0001-rt-i915.patch"
             linux-cachyos-rt.install) ;;
     rt-bore) ## RT with BORE Scheduler
-        patches+=("${_patchsource}/misc/0001-rt.patch"
+        patches+=("${_patchsource}/misc/0001-rt-i915.patch"
             "${_patchsource}/sched/0001-bore-cachy-rt.patch"
             linux-cachyos-rt.install) ;;
-    hardened) ## Hardened Patches with BORE Scheduler
-        patches+=("${_patchsource}/sched/0001-bore-cachy.patch"
-            "${_patchsource}/misc/0001-hardened.patch") ;;
-    sched-ext) ## SCHED-EXT
-        patches+=("${_patchsource}/sched/0001-sched-ext.patch") ;;
     esac
 
     # download and apply patches on source
