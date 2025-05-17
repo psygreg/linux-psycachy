@@ -547,7 +547,7 @@ do_things() {
     debing
 
     # Install compiled kernel
-    sudo dpkg -i linux-$_kv_name/custom-kernel-$_kv_name-$_kv_name-1.deb linux-$_kv_name/custom-kernel-headers-$_kv_name-$_kv_name-1.deb
+    sudo dpkg -i $HOME/cachyos-deb/linux-$_kv_name/custom-kernel-$_kv_name-$_kv_name-1.deb $HOME/cachyos-deb/linux-$_kv_name/custom-kernel-headers-$_kv_name-$_kv_name-1.deb
 
     # Create boot image and update grub
     sudo update-initramfs -c -k $_kv_name
@@ -590,8 +590,6 @@ kernel_upd () {
         mkdir cachyos-deb
         cd cachyos-deb
         do_things
-        cd ..
-        rm -rf cachyos-deb
     else
         whiptail --title "Update failed." --msgbox "Settings file missing. Did you install this kernel previously?" 8 78
     fi
