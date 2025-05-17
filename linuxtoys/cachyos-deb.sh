@@ -3,10 +3,10 @@
 # Maintainer: Laio O. Seman <laio@iee.org>
 
 # Initialize variables to store user choices
-_cachyos_config="CACHYOS"
+_cachyos_config="none"
 _cpusched_selection="cachyos"
 _llvm_lto_selection="thin"
-_tick_rate="500"
+_tick_rate="1000"
 _numa="enable"
 _hugepage="always"
 _lru_config="standard"
@@ -140,8 +140,7 @@ configure_cpusched() {
     _cpusched_selection=$(whiptail --title "CPU Scheduler Configuration" --radiolist \
         "Choose CPU Scheduler (use space to select):" 20 70 5 \
         "cachyos" "Default BORE + SCHED-EXT scheduler" $([ "$_cpusched_selection" = "cachyos" ] && echo "ON" || echo "OFF") \
-        "pds" "PDS CPU scheduler" $([ "$_cpusched_selection" = "pds" ] && echo "ON" || echo "OFF") \
-        "sched-ext" "SCHED-EXT CPU scheduler" $([ "$_cpusched_selection" = "sched-ext" ] && echo "ON" || echo "OFF") \
+        "rt" "Real-time preemption patch" $([ "$_cpusched_selection" = "rt" ] && echo "ON" || echo "OFF") \
         "rt-bore" "Real-time preemption with BORE scheduler" $([ "$_cpusched_selection" = "rt-bore" ] && echo "ON" || echo "OFF") \
         "none" "Do not configure CPU scheduler" $([ "$_cpusched_selection" = "none" ] && echo "ON" || echo "OFF") \
         3>&1 1>&2 2>&3)
