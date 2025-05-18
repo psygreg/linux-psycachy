@@ -140,6 +140,7 @@ configure_cpusched() {
     _cpusched_selection=$(whiptail --title "CPU Scheduler Configuration" --radiolist \
         "Choose CPU Scheduler (use space to select):" 20 70 5 \
         "cachyos" "Default BORE + SCHED-EXT scheduler" $([ "$_cpusched_selection" = "cachyos" ] && echo "ON" || echo "OFF") \
+        "bore" "BORE scheduler" $([ "$_cpusched_selection" = "bore" ] && echo "ON" || echo "OFF") \
         "rt" "Real-time preemption patch" $([ "$_cpusched_selection" = "rt" ] && echo "ON" || echo "OFF") \
         "rt-bore" "Real-time preemption with BORE scheduler" $([ "$_cpusched_selection" = "rt-bore" ] && echo "ON" || echo "OFF") \
         "none" "Do not configure CPU scheduler" $([ "$_cpusched_selection" = "none" ] && echo "ON" || echo "OFF") \
