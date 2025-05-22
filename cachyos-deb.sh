@@ -410,6 +410,13 @@ EOF
 
 do_things() {
 
+    # create btrfs snapshot if functionality available
+    if [ "$(findmnt -n -o FSTYPE /)" = "btrfs" ]; then
+        if command -v snapper &> /dev/null; then
+            snapper -c root create -c pre --description kernel update
+        fi
+    fi
+
     # define _major as the first two digits of the kernel version
     _major=$(echo $_kv_name | grep -oP '^\K[^\.]+')
 
