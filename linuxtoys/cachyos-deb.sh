@@ -549,7 +549,7 @@ do_things() {
     debing
 
     # Install compiled kernel
-    sudo dpkg -i $HOME/cachyos-deb/linux-$KERNEL_VERSION/custom-kernel-$KERNEL_VERSION-$KERNEL_VERSION-1.deb $HOME/cachyos-deb/linux-$KERNEL_VERSION/custom-kernel-headers-$KERNEL_VERSION-$KERNEL_VERSION-1.deb
+    sudo dpkg -i $HOME/cachyos-deb/linux-$_kv_name/custom-kernel-$KERNEL_VERSION-$KERNEL_VERSION-1.deb $HOME/cachyos-deb/linux-$_kv_name/custom-kernel-headers-$KERNEL_VERSION-$KERNEL_VERSION-1.deb
 
     # Create boot image and update grub
     sudo update-initramfs -c -k $KERNEL_VERSION
