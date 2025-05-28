@@ -588,16 +588,18 @@ first_install () {
 # Source settings from existing file for updates
 kernel_upd () {
 
-    if [ -f "$HOME/.local/kernelsetting" ]; then
-        source $HOME/.local/kernelsetting
-        cd $HOME
-        mkdir cachyos-deb
-        cd cachyos-deb
-        do_things
-        cd ..
-        rm -rf cachyos-deb
+    if [ "$(uname -r)" = "$_kv_name" ]; then
+        if [ -f "$HOME/.local/kernelsetting" ]; then
+            source $HOME/.local/kernelsetting
+            cd $HOME
+            mkdir cachyos-deb
+            cd cachyos-deb
+            do_things
+        else
+            whiptail --title "Update failed." --msgbox "Settings file missing. Did you install this kernel previously?" 8 78
+        fi
     else
-        whiptail --title "Update failed." --msgbox "Settings file missing. Did you install this kernel previously?" 8 78
+        whiptail --title "Update failed." --msgbox "Your kernel is already up to date." 8 78
     fi
 
 }
