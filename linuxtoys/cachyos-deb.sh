@@ -593,6 +593,8 @@ kernel_upd () {
             mkdir cachyos-deb
             cd cachyos-deb
             do_things
+            cd ..
+            rm -rf cachyos-deb
         else
             whiptail --title "Update failed." --msgbox "Settings file missing. Did you install this kernel previously?" 8 78
         fi
