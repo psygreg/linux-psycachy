@@ -2,7 +2,7 @@
 # Description: Script to compile a custom Linux kernel and package it into a .deb file for CachyOS
 # Maintainer: Laio O. Seman <laio@iee.org>
 
-# Initialize variables to store user choices
+# Initialize variables to store user choices -- defaults
 _cachyos_config="none"
 _cpusched_selection="cachyos"
 _llvm_lto_selection="thin"
@@ -264,8 +264,29 @@ configure_system_optimizations() {
 
 choose_kernel_option() {
 
+    # menu
+    while :; do
+
+        CHOICE=$(whiptail --title "Swapfile Creator" --menu "Create swapfile on:" 25 78 16 \
+            "Latest" "$_kv_latest" \
+            "Stable" "$_kver_stable" \
+            "Cancel" "" 3>&1 1>&2 2>&3)
+
+        exitstatus=$?
+        if [ $exitstatus != 0 ]; then
+            # Exit the script if the user presses Esc
+            break
+        fi
+
+        case $CHOICE in
+        Latest) _kv_name=$_kv_latest && _kv_url=$_kv_url_latest;;
+        Stable) _kv_name=$_kver_stable && _kv_url=$_kv_url_stable;;
+        Cancel | q) break ;;
+        *) echo "Invalid Option" ;;
+        esac
+    done
     # show kernel version to the user in a box and ask to confirm
-    whiptail --title "Kernel Version" --msgbox "The latest kernel version is $_kv_name" 8 78
+    whiptail --title "Kernel Version" --msgbox "The chosen kernel version is $_kv_name" 8 78
 
 }
 
@@ -549,7 +570,7 @@ do_things() {
     debing
 
     # Install compiled kernel
-    sudo dpkg -i linux-$_kv_name/custom-kernel-$KERNEL_VERSION-$KERNEL_VERSION-1.deb linux-$_kv_name/custom-kernel-headers-$KERNEL_VERSION-$KERNEL_VERSION-1.deb
+    sudo dpkg -i $HOME/cachyos-deb/linux-$_kv_name/custom-kernel-$KERNEL_VERSION-$KERNEL_VERSION-1.deb $HOME/cachyos-deb/linux-$_kv_name/custom-kernel-headers-$KERNEL_VERSION-$KERNEL_VERSION-1.deb
 
     # Create boot image and update grub
     sudo update-initramfs -c -k $KERNEL_VERSION
@@ -580,8 +601,6 @@ first_install () {
         echo "_preempt=${_preempt}"
         echo "_tick_type=${_tick_type}"
     } > $HOME/.local/kernelsetting
-    cd ..
-    rm -rf cachyos-deb
 
 }
 
@@ -622,12 +641,20 @@ if [ -n "$1" ]; then
     esac
 fi
 
-_kv_url=$(curl -s https://www.kernel.org | grep -A 1 'id="latest_link"' | awk 'NR==2' | grep -oP 'href="\K[^"]+')
-
+_kv_url_latest=$(curl -s https://www.kernel.org | grep -A 1 'id="latest_link"' | awk 'NR==2' | grep -oP 'href="\K[^"]+')
 # extract only the version number
-_kv_name=$(echo $_kv_url | grep -oP 'linux-\K[^"]+')
+_kv_latest=$(echo $_kv_url_latest | grep -oP 'linux-\K[^"]+')
 # remove the .tar.xz extension
-_kv_name=$(basename $_kv_name .tar.xz)
+_kv_latest=$(basename $_kv_latest .tar.xz)
+
+# initialize variables for stable kernel
+_kver_stable_ref="6"
+_kver_stable="6.14.9"
+_kv_url_stable="https://cdn.kernel.org/pub/linux/kernel/v${_kver_stable_ref}.x/linux-${_kver_stable}.tar.xz"
+
+# set default kernel setting to stable
+_kv_name=$_kver_stable
+_kv_url=$_kv_url_stable
 
 # call init script
 # display warning message saying this is a beta version
@@ -682,7 +709,9 @@ while :; do
     10) configure_system_optimizations ;;
     11) first_install ;;
     12) kernel_upd ;;
-    13 | q) break ;;
+    13 | q) cd $HOME
+            rm -rf cachyos-deb
+            break ;;
     *) echo "Invalid Option" ;;
     esac
 done
