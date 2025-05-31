@@ -267,7 +267,7 @@ choose_kernel_option() {
     # menu
     while :; do
 
-        CHOICE=$(whiptail --title "Swapfile Creator" --menu "Create swapfile on:" 25 78 16 \
+        CHOICE=$(whiptail --title "Kernel Version" --menu "Select:" 25 78 16 \
             "Latest" "$_kv_latest" \
             "Stable" "$_kver_stable" \
             "Cancel" "" 3>&1 1>&2 2>&3)
