@@ -607,7 +607,7 @@ first_install () {
 # Source settings from existing file for updates
 kernel_upd () {
 
-    if [ "$(uname -r)" = "$_kv_name" ]; then
+    if [ "$(uname -r)" != $_kv_name ]; then
         if [ -f "$HOME/.local/kernelsetting" ]; then
             source $HOME/.local/kernelsetting
             cd $HOME
@@ -653,8 +653,8 @@ _kver_stable="6.14.9"
 _kv_url_stable="https://cdn.kernel.org/pub/linux/kernel/v${_kver_stable_ref}.x/linux-${_kver_stable}.tar.xz"
 
 # set default kernel setting to stable
-_kv_name=$_kver_stable
-_kv_url=$_kv_url_stable
+_kv_name=${_kver_stable}
+_kv_url=${_kv_url_stable}
 
 # call init script
 # display warning message saying this is a beta version

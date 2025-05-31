@@ -607,7 +607,7 @@ first_install () {
 # Source settings from existing file for updates
 kernel_upd () {
 
-    if [ "$(uname -r)" = "$_kv_name" ]; then
+    if [ "$(uname -r)" != "$_kv_name" ]; then
         if [ -f "$HOME/.local/kernelsetting" ]; then
             source $HOME/.local/kernelsetting
             cd $HOME
