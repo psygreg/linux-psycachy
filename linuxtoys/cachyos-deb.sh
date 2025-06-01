@@ -585,7 +585,7 @@ first_install () {
     mkdir cachyos-deb
     cd cachyos-deb
     do_things
-    {   
+    {
         echo "_cachyos_config=${_cachyos_config}"
         echo "_cpusched_selection=${_cpusched_selection}"
         echo "_llvm_lto_selection=${_llvm_lto_selection}"
@@ -600,7 +600,10 @@ first_install () {
         echo "_march=${_march}"
         echo "_preempt=${_preempt}"
         echo "_tick_type=${_tick_type}"
-    } > $HOME/.local/kernelsetting
+        if [[ "${_kv_name}" == "${_kver_stable}" ]]; then
+            echo "_psygreg_krn=yes"
+        fi
+    } > "$HOME/.local/kernelsetting"
 
 }
 
