@@ -22,7 +22,7 @@ _tick_type="nohz_full"
 check_deps() {
 
     # List of dependencies to check
-    dependencies=(whiptail gcc git libncurses-dev curl gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf llvm bc rsync)
+    dependencies=(whiptail gcc git libncurses-dev curl gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf llvm rustc rust-llvm bc rsync)
 
     # Iterate over dependencies and check each one
     for dep in "${dependencies[@]}"; do
@@ -128,11 +128,7 @@ configure_cachyos() {
         "CachyOS" "" $cachyos_status \
         3>&1 1>&2 2>&3
 
-    if [[ "$selection" == *"CachyOS"* ]]; then
-        _cachyos_config="CACHYOS"
-    else
-        _cachyos_config="none"
-    fi
+    [[ "$selection" == *"CachyOS"* ]] && _cachyos_config="CACHYOS" || _cachyos_config="none"
 }
 
 # Function to configure CPU scheduler
@@ -457,7 +453,7 @@ do_things() {
     if [ "$_kv_name" = "$_kv_latest" ]; then
         wget -c https://raw.githubusercontent.com/CachyOS/linux-cachyos/master/linux-cachyos/config -O .config
     else
-        wget -c https://raw.githubusercontent.com/CachyOS/linux-cachyos/refs/heads/${_kver_st_short}/linux-cachyos/config -O .config
+        wget -c https://raw.githubusercontent.com/psygreg/linux-cachyos-deb/master/linuxtoys/config/config -O .config
     fi
 
     local _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}.${_mid}"
@@ -659,7 +655,6 @@ _kv_latest=$(basename $_kv_latest .tar.xz)
 # initialize variables for stable kernel
 _kver_stable_ref="6"
 _kver_stable="6.14.9"
-_kver_st_short="${_kver_stable%.*}"
 _kv_url_stable="https://cdn.kernel.org/pub/linux/kernel/v${_kver_stable_ref}.x/linux-${_kver_stable}.tar.xz"
 
 # set default kernel setting to stable
