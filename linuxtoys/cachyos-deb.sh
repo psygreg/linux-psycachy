@@ -595,6 +595,7 @@ first_install () {
         echo "_hugepage=${_hugepage}"
         echo "_lru_config=${_lru_config}"
         echo "_o3_optimization=${_o3_optimization}"
+        echo "_os_optimization=${_os_optimization}"
         echo "_performance_governor=${_performance_governor}"
         echo "_nr_cpus=${_nr_cpus}"
         echo "_bbr3=${_bbr3}"
