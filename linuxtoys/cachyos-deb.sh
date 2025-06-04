@@ -3,7 +3,7 @@
 # Maintainer: Laio O. Seman <laio@iee.org>
 
 # Initialize variables to store user choices -- defaults
-_cachyos_config="none"
+_cachyos_config="CACHYOS"
 _cpusched_selection="cachyos"
 _llvm_lto_selection="thin"
 _tick_rate="1000"
