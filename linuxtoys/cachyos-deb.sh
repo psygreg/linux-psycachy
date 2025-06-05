@@ -621,6 +621,7 @@ if [ -n "$1" ]; then
         else
             first_install
         fi
+        exit 0
         ;;
     esac
 fi
