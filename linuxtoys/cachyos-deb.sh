@@ -22,10 +22,10 @@ _tick_type="nohz_full"
 check_deps() {
 
     # List of dependencies to check
-    local dependencies=(whiptail gcc git libncurses-dev curl gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf llvm rustc rust-llvm bc rsync)
+    local _packages=(whiptail gcc git libncurses-dev curl gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf llvm rustc rust-llvm bc rsync)
 
     # Iterate over dependencies and check each one
-    depchecker_lib
+    _install_
 
 }
 
