@@ -22,18 +22,10 @@ _tick_type="nohz_full"
 check_deps() {
 
     # List of dependencies to check
-    dependencies=(whiptail gcc git libncurses-dev curl gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf llvm rustc rust-llvm bc rsync)
+    local dependencies=(whiptail gcc git libncurses-dev curl gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf llvm rustc rust-llvm bc rsync)
 
     # Iterate over dependencies and check each one
-    for dep in "${dependencies[@]}"; do
-        if dpkg -s "$dep" 2>/dev/null 1>&2; then
-            #echo "Package $dep is installed."
-            continue
-        else
-            #echo "Package $dep is NOT installed."
-            sudo apt install -y "$dep"
-        fi
-    done
+    depchecker_lib
 
 }
 
@@ -98,26 +90,6 @@ init_script() {
     # define _march as MARCH2
     _march=$MARCH2
 }
-
-export NEWT_COLORS='
-    root=white,blue
-    border=black,lightgray
-    window=black,lightgray
-    shadow=black,gray
-    title=black,lightgray
-    button=black,cyan
-    actbutton=white,blue
-    checkbox=black,lightgray
-    actcheckbox=black,cyan
-    entry=black,lightgray
-    label=black,lightgray
-    listbox=black,lightgray
-    actlistbox=black,cyan
-    textbox=black,lightgray
-    acttextbox=black,cyan
-    helpline=white,blue
-    roottext=black,lightgray
-'
 
 configure_cachyos() {
     local cachyos_status=$([ "$_cachyos_config" = "CACHYOS" ] && echo "ON" || echo "OFF")
@@ -643,6 +615,13 @@ if [ -n "$1" ]; then
         debing
         exit 0
         ;;
+    --stable | -s)
+        if [ -f "$HOME/.local/kernelsetting" ]; then
+            kernel_upd
+        else
+            first_install
+        fi
+        ;;
     esac
 fi
 
@@ -663,6 +642,9 @@ _kv_url=$_kv_url_stable
 
 # call init script
 # display warning message saying this is a beta version
+
+# source linuxtoys lib
+source <(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/main/src/linuxtoys.lib)
 
 # run the check_deps function and store the result in dep_status
 check_deps
