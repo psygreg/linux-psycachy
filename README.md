@@ -29,12 +29,12 @@ To use the script, follow these steps:
 1. Clone the repository to your local machine.
 2. Make the script executable with `chmod +x cachyos-deb.sh`.
 3. Run the script with `./cachyos-deb.sh`.
-4.1. Follow the on-screen prompts to select your desired kernel version and configurations, for:
+4. Follow the on-screen prompts to select your desired kernel version and configurations, for:
    - Choose the kernel version.
    - Enable or disable CachyOS optimizations.
    - Configure the CPU scheduler, LLVM LTO, tick rate, NR_CPUS, Hugepages, LRU, and other system optimizations.
-   - Select the preempt type and tick type for further system tuning; or \
-4.2. Install with optimized defaults and my custom 'stable' branch, which is updated roughly every two months, with `./cachyos-deb.sh -s`. This has been thoroughly tested on Debian Testing and Ubuntu (with Gnome, the standard Canonical flavour), but should work elsewhere without complications.
+   - Select the preempt type and tick type for further system tuning; or
+5. Install with optimized defaults and my custom 'stable' branch, which is updated roughly every two months, with `./cachyos-deb.sh -s`. This has been thoroughly tested on Debian Testing and Ubuntu (with Gnome, the standard Canonical flavour), but should work elsewhere without complications.
 
 ## Advanced Configurations
 
