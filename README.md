@@ -33,7 +33,7 @@ To use the script, follow these steps:
    - Choose the kernel version.
    - Enable or disable CachyOS optimizations.
    - Configure the CPU scheduler, LLVM LTO, tick rate, NR_CPUS, Hugepages, LRU, and other system optimizations.
-   - Select the preempt type and tick type for further system tuning; or
+   - Select the preempt type and tick type for further system tuning; or \
 4.2. Install with optimized defaults and my custom 'stable' branch, which is updated roughly every two months, with `./cachyos-deb.sh -s`. This has been thoroughly tested on Debian Testing and Ubuntu (with Gnome, the standard Canonical flavour), but should work elsewhere without complications.
 
 ## Advanced Configurations
