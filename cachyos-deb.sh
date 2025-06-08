@@ -22,18 +22,10 @@ _tick_type="nohz_full"
 check_deps() {
 
     # List of dependencies to check
-    dependencies=(whiptail gcc git libncurses-dev curl gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf llvm bc rsync rustc rust-llvm)
+    local _packages=(whiptail gcc git libncurses-dev curl gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf llvm rustc rust-llvm bc rsync)
 
     # Iterate over dependencies and check each one
-    for dep in "${dependencies[@]}"; do
-        if dpkg -s "$dep" 2>/dev/null 1>&2; then
-            #echo "Package $dep is installed."
-            continue
-        else
-            #echo "Package $dep is NOT installed."
-            sudo apt install -y "$dep"
-        fi
-    done
+    _install_
 
 }
 
@@ -98,26 +90,6 @@ init_script() {
     # define _march as MARCH2
     _march=$MARCH2
 }
-
-export NEWT_COLORS='
-    root=white,blue
-    border=black,lightgray
-    window=black,lightgray
-    shadow=black,gray
-    title=black,lightgray
-    button=black,cyan
-    actbutton=white,blue
-    checkbox=black,lightgray
-    actcheckbox=black,cyan
-    entry=black,lightgray
-    label=black,lightgray
-    listbox=black,lightgray
-    actlistbox=black,cyan
-    textbox=black,lightgray
-    acttextbox=black,cyan
-    helpline=white,blue
-    roottext=black,lightgray
-'
 
 configure_cachyos() {
     local cachyos_status=$([ "$_cachyos_config" = "CACHYOS" ] && echo "ON" || echo "OFF")
@@ -586,7 +558,7 @@ first_install () {
     mkdir cachyos-deb
     cd cachyos-deb
     do_things
-    {   
+    {
         echo "_cachyos_config=${_cachyos_config}"
         echo "_cpusched_selection=${_cpusched_selection}"
         echo "_llvm_lto_selection=${_llvm_lto_selection}"
@@ -599,17 +571,19 @@ first_install () {
         echo "_performance_governor=${_performance_governor}"
         echo "_nr_cpus=${_nr_cpus}"
         echo "_bbr3=${_bbr3}"
-        echo "_march=${_march}"
         echo "_preempt=${_preempt}"
         echo "_tick_type=${_tick_type}"
-    } > $HOME/.local/kernelsetting
+        if [[ "${_kv_name}" == "${_kver_stable}" ]]; then
+            echo "_psygreg_krn=yes"
+        fi
+    } > "$HOME/.local/kernelsetting"
 
 }
 
 # Source settings from existing file for updates
 kernel_upd () {
 
-    if [ "$(uname -r)" != $_kv_name ]; then
+    if [ "$(uname -r)" != "$_kv_name" ]; then
         if [ -f "$HOME/.local/kernelsetting" ]; then
             source $HOME/.local/kernelsetting
             cd $HOME
@@ -640,6 +614,22 @@ if [ -n "$1" ]; then
         debing
         exit 0
         ;;
+    --stable | -s)
+        _kver_stable_ref="6"
+        _kver_stable="6.14.9"
+        _kv_url_stable="https://cdn.kernel.org/pub/linux/kernel/v${_kver_stable_ref}.x/linux-${_kver_stable}.tar.xz"
+        _kv_name=$_kver_stable
+        _kv_url=$_kv_url_stable
+        source <(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/main/src/linuxtoys.lib)
+        check_deps
+        init_script
+        if [ -f "$HOME/.local/kernelsetting" ]; then
+            kernel_upd
+        else
+            first_install
+        fi
+        exit 0
+        ;;
     esac
 fi
 
@@ -655,12 +645,14 @@ _kver_stable="6.14.9"
 _kv_url_stable="https://cdn.kernel.org/pub/linux/kernel/v${_kver_stable_ref}.x/linux-${_kver_stable}.tar.xz"
 
 # set default kernel setting to stable
-_kv_name=${_kver_stable}
-_kv_url=${_kv_url_stable}
+_kv_name=$_kver_stable
+_kv_url=$_kv_url_stable
 
 # call init script
 # display warning message saying this is a beta version
 
+# source linuxtoys lib
+source <(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/main/src/linuxtoys.lib)
 # run the check_deps function and store the result in dep_status
 check_deps
 

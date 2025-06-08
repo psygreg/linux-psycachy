@@ -620,11 +620,12 @@ if [ -n "$1" ]; then
         _kv_url_stable="https://cdn.kernel.org/pub/linux/kernel/v${_kver_stable_ref}.x/linux-${_kver_stable}.tar.xz"
         _kv_name=$_kver_stable
         _kv_url=$_kv_url_stable
+        source <(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/main/src/linuxtoys.lib)
+        check_deps
+        init_script
         if [ -f "$HOME/.local/kernelsetting" ]; then
-            init_script
             kernel_upd
         else
-            init_script
             first_install
         fi
         exit 0
