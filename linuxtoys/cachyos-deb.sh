@@ -571,7 +571,6 @@ first_install () {
         echo "_performance_governor=${_performance_governor}"
         echo "_nr_cpus=${_nr_cpus}"
         echo "_bbr3=${_bbr3}"
-        echo "_march=${_march}"
         echo "_preempt=${_preempt}"
         echo "_tick_type=${_tick_type}"
         if [[ "${_kv_name}" == "${_kver_stable}" ]]; then
@@ -616,9 +615,16 @@ if [ -n "$1" ]; then
         exit 0
         ;;
     --stable | -s)
+        _kver_stable_ref="6"
+        _kver_stable="6.14.9"
+        _kv_url_stable="https://cdn.kernel.org/pub/linux/kernel/v${_kver_stable_ref}.x/linux-${_kver_stable}.tar.xz"
+        _kv_name=$_kver_stable
+        _kv_url=$_kv_url_stable
         if [ -f "$HOME/.local/kernelsetting" ]; then
+            init_script
             kernel_upd
         else
+            init_script
             first_install
         fi
         exit 0
