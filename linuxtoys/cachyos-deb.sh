@@ -594,6 +594,8 @@ first_install () {
             echo "_bdir=${build_dir}"
         fi
     } > "$HOME/.local/kernelsetting"
+    cd ..
+    rm -rf cachyos-deb
 
 }
 
