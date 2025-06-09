@@ -554,7 +554,21 @@ do_things() {
 # Write settings to file on first installation
 first_install () {
 
-    cd $HOME
+    _bdir=""
+    _bdir=$(whiptail --inputbox "Enter path for temporary buildfiles. Leave empty to use ${HOME}." 10 30 3>&1 1>&2 2>&3)
+    if [ -n "$_bdir" ]; then
+        if [ -f "$_bdir" ]; then
+            build_dir="$_bdir"
+        else
+            local title="Error"
+            local msg="Invalid path for buildfiles, try again."
+            _msgbox_
+            return
+        fi
+    else
+        build_dir="$HOME"
+    fi
+    cd $build_dir
     mkdir cachyos-deb
     cd cachyos-deb
     do_things
@@ -576,6 +590,9 @@ first_install () {
         if [[ "${_kv_name}" == "${_kver_stable}" ]]; then
             echo "_psygreg_krn=yes"
         fi
+        if [[ "$build_dir" != "$HOME" ]]; then
+            echo "_bdir=${build_dir}"
+        fi
     } > "$HOME/.local/kernelsetting"
 
 }
@@ -586,7 +603,12 @@ kernel_upd () {
     if [ "$(uname -r)" != "$_kv_name" ]; then
         if [ -f "$HOME/.local/kernelsetting" ]; then
             source $HOME/.local/kernelsetting
-            cd $HOME
+            if [ -n "$_bdir" ]; then
+                build_dir="$HOME"
+            else
+                build_dir="$_bdir"
+            fi
+            cd $build_dir
             mkdir cachyos-deb
             cd cachyos-deb
             do_things
