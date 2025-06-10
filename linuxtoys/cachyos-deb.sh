@@ -397,7 +397,6 @@ EOF
     
 }
 
-
 do_things() {
 
     # create btrfs snapshot if functionality available
@@ -542,6 +541,10 @@ do_things() {
     # Make the kernel calling debing
     debing
 
+}
+
+install_f () {
+
     # Install compiled kernel
     sudo dpkg -i $HOME/cachyos-deb/linux-$_kv_name/custom-kernel-$KERNEL_VERSION-$KERNEL_VERSION-1.deb $HOME/cachyos-deb/linux-$_kv_name/custom-kernel-headers-$KERNEL_VERSION-$KERNEL_VERSION-1.deb
 
@@ -572,6 +575,7 @@ first_install () {
     mkdir cachyos-deb
     cd cachyos-deb
     do_things
+    install_f
     {
         echo "_cachyos_config=${_cachyos_config}"
         echo "_cpusched_selection=${_cpusched_selection}"
@@ -614,6 +618,7 @@ kernel_upd () {
             mkdir cachyos-deb
             cd cachyos-deb
             do_things
+            install_f
             cd ..
             rm -rf cachyos-deb
         else
@@ -622,6 +627,35 @@ kernel_upd () {
     else
         whiptail --title "Update failed." --msgbox "Your kernel is already up to date." 8 78
     fi
+
+}
+
+# build only
+builder () {
+
+    source <(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/main/src/linuxtoys.lib)
+    _bdir=""
+    _bdir=$(whiptail --inputbox "Enter path for temporary buildfiles. Leave empty to use ${HOME}." 10 30 3>&1 1>&2 2>&3)
+    if [ -n "$_bdir" ]; then
+        if [ -f "$_bdir" ]; then
+            build_dir="$_bdir"
+        else
+            local title="Error"
+            local msg="Invalid path for buildfiles, try again."
+            _msgbox_
+            return
+        fi
+    else
+        build_dir="$HOME"
+    fi
+    _kver_stable_ref="6"
+    _kver_stable="6.14.10"
+    _kv_url_stable="https://cdn.kernel.org/pub/linux/kernel/v${_kver_stable_ref}.x/linux-${_kver_stable}.tar.xz"
+    _kv_name=$_kver_stable
+    _kv_url=$_kv_url_stable
+    check_deps
+    init_script
+    do_things
 
 }
 
@@ -635,7 +669,7 @@ if [ -n "$1" ]; then
         exit 0
         ;;
     --build | -b)
-        debing
+        builder
         exit 0
         ;;
     --stable | -s)
