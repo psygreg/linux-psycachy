@@ -599,6 +599,7 @@ first_install () {
         fi
     } > "$HOME/.local/kernelsetting"
     cd ..
+    sleep 1
     rm -rf cachyos-deb
 
 }
@@ -620,6 +621,7 @@ kernel_upd () {
             do_things
             install_f
             cd ..
+            sleep 1
             rm -rf cachyos-deb
         else
             whiptail --title "Update failed." --msgbox "Settings file missing. Did you install this kernel previously?" 8 78
