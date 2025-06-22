@@ -95,10 +95,10 @@ configure_cachyos() {
     local cachyos_status=$([ "$_cachyos_config" = "CACHYOS" ] && echo "ON" || echo "OFF")
     local selection
 
-    whiptail --title "CachyOS Configuration" --checklist \
+    selection=$(whiptail --title "CachyOS Configuration" --checklist \
         "Select optimizations to enable:" 20 78 1 \
         "CachyOS" "" $cachyos_status \
-        3>&1 1>&2 2>&3
+        3>&1 1>&2 2>&3)
 
     [[ "$selection" == *"CachyOS"* ]] && _cachyos_config="CACHYOS" || _cachyos_config="none"
 }
