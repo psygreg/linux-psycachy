@@ -430,7 +430,7 @@ do_things() {
     if [ "$_kv_name" = "$_kv_latest" ]; then
         wget -c https://raw.githubusercontent.com/CachyOS/linux-cachyos/master/linux-cachyos/config -O .config
     else
-        wget -c https://raw.githubusercontent.com/psygreg/linux-cachyos-deb/master/linuxtoys/config/config -O .config
+        wget -c https://raw.githubusercontent.com/psygreg/linux-cachyos-deb/master/linux-cachyos-gen/config -O .config
     fi
 
     local _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}.${_mid}"
