@@ -18,6 +18,9 @@ _bbr3="yes"
 _march="native"
 _preempt="preempt"
 _tick_type="nohz_full"
+_vma="no"
+_damon="no"
+_zfs="no"
 
 check_deps() {
 
@@ -25,7 +28,12 @@ check_deps() {
     local _packages=(whiptail gcc git libncurses-dev curl gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf llvm rustc rust-llvm bc rsync)
 
     # Iterate over dependencies and check each one
-    _install_
+    for package in "${_packages[@]}"; do
+        if ! dpkg -l | grep -q "^ii  $package "; then
+            echo "Installing missing dependency: $package"
+            sudo apt-get update && sudo apt-get install -y "$package"
+        fi
+    done
 
 }
 
@@ -92,15 +100,17 @@ init_script() {
 }
 
 configure_cachyos() {
-    local cachyos_status=$([ "$_cachyos_config" = "CACHYOS" ] && echo "ON" || echo "OFF")
     local selection
 
-    whiptail --title "CachyOS Configuration" --checklist \
+    selection=$(whiptail --title "CachyOS Configuration" --checklist \
         "Select optimizations to enable:" 20 78 1 \
-        "CachyOS" "" $cachyos_status \
-        3>&1 1>&2 2>&3
+        "CachyOS" "Enable CachyOS optimizations" "OFF" \
+        3>&1 1>&2 2>&3)
 
-    [[ "$selection" == *"CachyOS"* ]] && _cachyos_config="CACHYOS" || _cachyos_config="none"
+    # Check if user made a selection (not cancelled)
+    if [ $? -eq 0 ]; then
+        [[ "$selection" == *"CachyOS"* ]] && _cachyos_config="CACHYOS" || _cachyos_config="none"
+    fi
 }
 
 # Function to configure CPU scheduler
@@ -343,6 +353,7 @@ EOF
 
         # Create directory structure for ZFS package
         mkdir -p ${ZFS_PKG_DIR}/DEBIAN
+        mkdir -p ${ZFS_PKG_DIR}/lib/modules/${KERNEL_VERSION}/extra
 
         # Create control file for ZFS package
         cat >zfs-${KERNEL_VERSION}/DEBIAN/control <<EOF
@@ -445,12 +456,10 @@ do_things() {
     bore) ## BORE Scheduler
         patches+=("${_patchsource}/sched/0001-bore.patch") ;;
     rt) ## EEVDF with RT patches
-        patches+=("${_patchsource}/misc/0001-rt-i915.patch"
-            linux-cachyos-rt.install) ;;
+        patches+=("${_patchsource}/misc/0001-rt-i915.patch") ;;
     rt-bore) ## RT with BORE Scheduler
         patches+=("${_patchsource}/misc/0001-rt-i915.patch"
-            "${_patchsource}/sched/0001-bore.patch"
-            linux-cachyos-rt.install) ;;
+            "${_patchsource}/sched/0001-bore.patch") ;;
     esac
 
     # download and apply patches on source
@@ -461,10 +470,10 @@ do_things() {
     done
 
     # set architecture
-    scripts/config -k --disable CONFIG_GENERIC_CPU
-    scripts/config -k --enable CONFIG_${MARCH2}
+    scripts/config --disable CONFIG_GENERIC_CPU
+    scripts/config --enable CONFIG_${MARCH2}
 
-    case "$_cpusched_config" in
+    case "$_cpusched_selection" in
     cachyos) scripts/config -e SCHED_BORE -e SCHED_CLASS_EXT ;;
     bore | hardened) scripts/config -e SCHED_BORE ;;
     eevdf) ;;
@@ -497,9 +506,9 @@ do_things() {
     esac
 
     case "$_tick_type" in
-    perodic) scripts/config -d NO_HZ_IDLE -d NO_HZ_FULL -d NO_HZ -d NO_HZ_COMMON -e HZ_PERIODIC ;;
-    idle) scripts/config -d HZ_PERIODIC -d NO_HZ_FULL -e NO_HZ_IDLE -e NO_HZ -e NO_HZ_COMMON ;;
-    full) scripts/config -d HZ_PERIODIC -d NO_HZ_IDLE -d CONTEXT_TRACKING_FORCE -e NO_HZ_FULL_NODEF -e NO_HZ_FULL -e NO_HZ -e NO_HZ_COMMON -e CONTEXT_TRACKING ;;
+    periodic) scripts/config -d NO_HZ_IDLE -d NO_HZ_FULL -d NO_HZ -d NO_HZ_COMMON -e HZ_PERIODIC ;;
+    nohz_idle) scripts/config -d HZ_PERIODIC -d NO_HZ_FULL -e NO_HZ_IDLE -e NO_HZ -e NO_HZ_COMMON ;;
+    nohz_full) scripts/config -d HZ_PERIODIC -d NO_HZ_IDLE -d CONTEXT_TRACKING_FORCE -e NO_HZ_FULL_NODEF -e NO_HZ_FULL -e NO_HZ -e NO_HZ_COMMON -e CONTEXT_TRACKING ;;
     esac
 
     # Apply NUMA configuration
@@ -560,12 +569,10 @@ first_install () {
     _bdir=""
     _bdir=$(whiptail --inputbox "Enter path for temporary buildfiles. Leave empty to use ${HOME}." 10 30 3>&1 1>&2 2>&3)
     if [ -n "$_bdir" ]; then
-        if [ -f "$_bdir" ]; then
+        if [ -d "$_bdir" ]; then
             build_dir="$_bdir"
         else
-            local title="Error"
-            local msg="Invalid path for buildfiles, try again."
-            _msgbox_
+            whiptail --title "Error" --msgbox "Invalid path for buildfiles, try again." 8 60
             return
         fi
     else
@@ -610,7 +617,7 @@ kernel_upd () {
     if [ "$(uname -r)" != "$_kv_name" ]; then
         if [ -f "$HOME/.local/kernelsetting" ]; then
             source $HOME/.local/kernelsetting
-            if [ -n "$_bdir" ]; then
+            if [ -z "$_bdir" ]; then
                 build_dir="$HOME"
             else
                 build_dir="$_bdir"
@@ -639,12 +646,10 @@ builder () {
     _bdir=""
     _bdir=$(whiptail --inputbox "Enter path for temporary buildfiles. Leave empty to use ${HOME}." 10 30 3>&1 1>&2 2>&3)
     if [ -n "$_bdir" ]; then
-        if [ -f "$_bdir" ]; then
+        if [ -d "$_bdir" ]; then
             build_dir="$_bdir"
         else
-            local title="Error"
-            local msg="Invalid path for buildfiles, try again."
-            _msgbox_
+            whiptail --title "Error" --msgbox "Invalid path for buildfiles, try again." 8 60
             return
         fi
     else
