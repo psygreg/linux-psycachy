@@ -28,12 +28,7 @@ check_deps() {
     local _packages=(whiptail gcc git libncurses-dev curl gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf llvm rustc rust-llvm bc rsync)
 
     # Iterate over dependencies and check each one
-    for package in "${_packages[@]}"; do
-        if ! dpkg -l | grep -q "^ii  $package "; then
-            echo "Installing missing dependency: $package"
-            sudo apt-get update && sudo apt-get install -y "$package"
-        fi
-    done
+    _install_
 
 }
 

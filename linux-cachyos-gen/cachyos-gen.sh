@@ -465,8 +465,7 @@ do_things() {
     done
 
     # set architecture
-    scripts/config --disable CONFIG_GENERIC_CPU
-    scripts/config --enable CONFIG_${MARCH2}
+    scripts/config --enable CONFIG_GENERIC_CPU
 
     case "$_cpusched_selection" in
     cachyos) scripts/config -e SCHED_BORE -e SCHED_CLASS_EXT ;;
@@ -656,7 +655,6 @@ builder () {
     _kv_name=$_kver_stable
     _kv_url=$_kv_url_stable
     check_deps
-    init_script
     do_things
 
 }
