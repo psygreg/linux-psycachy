@@ -464,9 +464,6 @@ do_things() {
         patch -p1 <$(basename $i)
     done
 
-    # set architecture
-    scripts/config --enable CONFIG_GENERIC_CPU
-
     case "$_cpusched_selection" in
     cachyos) scripts/config -e SCHED_BORE -e SCHED_CLASS_EXT ;;
     bore | hardened) scripts/config -e SCHED_BORE ;;
