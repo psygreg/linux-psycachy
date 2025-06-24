@@ -70,6 +70,20 @@ kver_latest=$(basename $kver_latest .tar.xz)
 ver_psy="$kver_psycachy-psycachy"
 ver_cachy="$kver_latest-cachyos"
 
+# flag for linuxtoys bypass
+if [ -n "$1" ]; then
+    case "$1" in
+    --help | -h)
+        echo "Usage: $0"
+        echo "Sign your custom kernel for Secure Boot"
+        exit 0
+        ;;
+    --linuxtoys | -l)
+        kver_sign="$ver_psy" && signing
+        ;;
+    esac
+fi
+
 # menu
 while :; do
 
