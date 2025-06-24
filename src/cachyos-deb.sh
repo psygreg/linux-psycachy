@@ -4,7 +4,7 @@
 
 # Initialize variables to store user choices -- defaults
 _cachyos_config="none"
-_cpusched_selection="cachyos"
+_cpusched_selection="rt-bore"
 _llvm_lto_selection="thin"
 _tick_rate="1000"
 _numa="enable"
@@ -34,11 +34,13 @@ check_deps() {
 
 # Check if GCC is installed
 check_gcc() {
+
     if ! [ -x "$(command -v gcc)" ]; then
         # Display error message if GCC is not installed
         echo "Error: GCC is not installed. Please install GCC and try again." >&2
         exit 1
     fi
+
 }
 
 # Original function used in the CachyOS mainline
@@ -273,14 +275,14 @@ debing() {
     ARCH=$(dpkg --print-architecture)
 
     # Kernel package variables
-    KERNEL_PKG_NAME=custom-kernel-${KERNEL_VERSION}
+    KERNEL_PKG_NAME=${KERNEL_PKG_VERSION}-psycachy
     KERNEL_PKG_VERSION=${KERNEL_VERSION}-1
-    KERNEL_PKG_DIR=${KERNEL_PKG_NAME}-${KERNEL_PKG_VERSION}
+    KERNEL_PKG_DIR=${KERNEL_PKG_NAME}
 
     # Headers package variables
-    HEADERS_PKG_NAME=custom-kernel-headers-${KERNEL_VERSION}
+    HEADERS_PKG_NAME=headers-${HEADERS_PKG_VERSION}-psycachy
     HEADERS_PKG_VERSION=${KERNEL_VERSION}-1
-    HEADERS_PKG_DIR=${HEADERS_PKG_NAME}-${HEADERS_PKG_VERSION}
+    HEADERS_PKG_DIR=${HEADERS_PKG_NAME}
 
     # Function to create kernel package
     package_kernel() {
@@ -372,11 +374,15 @@ EOF
         rm -rf ${ZFS_PKG_DIR}
     }
 
+    make olddefconfig
 
     # Compile the kernel and modules
-    make -j$(nproc)
-    mkdir -p /tmp/kernel-modules
-    make modules_install INSTALL_MOD_PATH=/tmp/kernel-modules
+    if [ "_kv_name" == "_kver_stable" ]; then
+        make bindeb-pkg -j"$(nproc)" LOCALVERSION=-"psycachy" KDEB_PKGVERSION="$(make kernelversion)-1"
+        #make -j$(nproc) KDEB_PKGVERSION=${_kver_stable}.psycachy-gen bindeb-pkg
+    else
+        make bindeb-pkg -j"$(nproc)" LOCALVERSION=-"cachyos" KDEB_PKGVERSION="$(make kernelversion)-1"
+    fi
 
     if [ "$_zfs" == "yes" ]; then
         LINUX_DIR=$(pwd)
@@ -392,11 +398,11 @@ EOF
         cd $LINUX_DIR
     fi
 
-    # Package the kernel
-    package_kernel
+    ## Package the kernel
+    # package_kernel
 
-    # Package the headers
-    package_headers
+    ## Package the headers
+    # package_headers
     if [ "$_zfs" == "yes" ]; then
         package_zfs
     fi
@@ -406,11 +412,11 @@ EOF
 do_things() {
 
     # create btrfs snapshot if functionality available
-    #if [ "$(findmnt -n -o FSTYPE /)" = "btrfs" ]; then
-    #    if command -v snapper &> /dev/null; then
-    #        snapper -c root create -c pre --description kernel update
-    #    fi
-    #fi
+    if [ "$(findmnt -n -o FSTYPE /)" = "btrfs" ]; then
+        if command -v snapper &> /dev/null; then
+            snapper -c root create -c pre --description kernel update
+        fi
+    fi
 
     # define _major as the first two digits of the kernel version
     _major=$(echo $_kv_name | grep -oP '^\K[^\.]+')
@@ -421,7 +427,7 @@ do_things() {
     # download kernel to linux.tar.xz
     wget -c $_kv_url -O linux.tar.xz
     # extract kernel
-    tar -xf linux.tar.xz
+    tar -xaf linux.tar.xz
     # enter kernel directory
 
     cd linux-$_kv_name
@@ -430,7 +436,7 @@ do_things() {
     if [ "$_kv_name" = "$_kv_latest" ]; then
         wget -c https://raw.githubusercontent.com/CachyOS/linux-cachyos/master/linux-cachyos/config -O .config
     else
-        wget -c https://raw.githubusercontent.com/psygreg/linux-cachyos-deb/master/linux-cachyos-gen/config -O .config
+        wget -c https://raw.githubusercontent.com/psygreg/linux-cachyos-deb/master/src/config -O .config
     fi
 
     local _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}.${_mid}"
@@ -463,6 +469,15 @@ do_things() {
         wget -c $i
         patch -p1 <$(basename $i)
     done
+
+    if [ -n "$_is_generic" ]; then
+        echo "Building generic CPU kernel."
+    else
+        # set architecture if not on generic build mode
+        ./scripts/config --disable CONFIG_GENERIC_CPU
+        ./scripts/config --enable CONFIG_${MARCH2}
+    fi
+    ./scripts/config -d CONFIG_MODULE_SIG_ALL -d CONFIG_MODULE_SIG_KEY -d CONFIG_SYSTEM_TRUSTED_KEYS
 
     case "$_cpusched_selection" in
     cachyos) scripts/config -e SCHED_BORE -e SCHED_CLASS_EXT ;;
@@ -652,41 +667,10 @@ builder () {
     _kv_name=$_kver_stable
     _kv_url=$_kv_url_stable
     check_deps
+    init_script
     do_things
 
 }
-
-# check if any argument was passed
-
-if [ -n "$1" ]; then
-    case "$1" in
-    --help | -h)
-        echo "Usage: $0"
-        echo "Compile a custom Linux kernel and package it into a .deb file for CachyOS"
-        exit 0
-        ;;
-    --build | -b)
-        builder
-        exit 0
-        ;;
-    --stable | -s)
-        _kver_stable_ref="6"
-        _kver_stable="6.14.10"
-        _kv_url_stable="https://cdn.kernel.org/pub/linux/kernel/v${_kver_stable_ref}.x/linux-${_kver_stable}.tar.xz"
-        _kv_name=$_kver_stable
-        _kv_url=$_kv_url_stable
-        source <(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/main/src/linuxtoys.lib)
-        check_deps
-        init_script
-        if [ -f "$HOME/.local/kernelsetting" ]; then
-            kernel_upd
-        else
-            first_install
-        fi
-        exit 0
-        ;;
-    esac
-fi
 
 _kv_url_latest=$(curl -s https://www.kernel.org | grep -A 1 'id="latest_link"' | awk 'NR==2' | grep -oP 'href="\K[^"]+')
 # extract only the version number
@@ -708,6 +692,42 @@ _kv_url=$_kv_url_stable
 
 # source linuxtoys lib
 source <(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/main/src/linuxtoys.lib)
+
+# check if any argument was passed
+
+if [ -n "$1" ]; then
+    case "$1" in
+    --help | -h)
+        echo "Usage: $0"
+        echo "Compile a custom Linux kernel and package it into a .deb file for CachyOS"
+        exit 0
+        ;;
+    --build-stable | -b)
+        builder
+        exit 0
+        ;;
+    --build-gen | -g)
+        _is_generic="1"
+        builder
+        exit 0
+        ;;
+    --build-cachy | -c)
+        _kv_name=$_kv_latest && _kv_url=$_kv_url_latest
+        builder
+        exit 0
+        ;;
+    --stable | -s)
+        check_deps
+        init_script
+        if [ -f "$HOME/.local/kernelsetting" ]; then
+            kernel_upd
+        else
+            first_install
+        fi
+        exit 0
+        ;;
+    esac
+fi
 
 # run the check_deps function and store the result in dep_status
 check_deps

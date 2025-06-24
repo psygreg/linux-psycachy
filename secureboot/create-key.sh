@@ -14,13 +14,7 @@ mok_creator () {
     sleep 1
     cd $HOME/.sb
     wget https://raw.githubusercontent.com/psygreg/linux-cachyos-deb/master/secureboot/mokconfig.cnf || { echo "Download failed"; exit 1; }
-    # write country, province and locality with locale
-    local COUNTRY_CODE=$(locale | grep -i "^lc_" | grep -m1 -oP "[A-Z]{2}(?=\b)" || echo "US")
-    sed -i \
-        -e "s|countryName\s\+=\s\+<YOURcountrycode>|countryName             = ${COUNTRY_CODE}|" \
-        -e "s|stateOrProvinceName\s\+=\s\+<YOURstate>|stateOrProvinceName     = ${COUNTRY_CODE}|" \
-        -e "s|localityName\s\+=\s\+<YOURcity>|localityName            = ${COUNTRY_CODE}|" \
-        "mokconfig.cnf"
+    # create MOK keypair
     openssl req -config ./mokconfig.cnf \
             -new -x509 -newkey rsa:2048 \
             -nodes -days 36500 -outform DER \
@@ -37,7 +31,6 @@ mok_creator () {
 # sign kernel
 sign_upd () {
 
-    kver_sign=$(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/main/src/psy-krn)
     local kernel_path="/boot/vmlinuz-${kver_sign}"
     [[ -f "$kernel_path" ]] || { echo "Kernel not found: $kernel_path"; exit 3; }
     sudo sbsign --key MOK.priv --cert MOK.pem /boot/vmlinuz-${kver_sign} --output /boot/vmlinuz-${kver_sign}.signed
@@ -50,15 +43,52 @@ sign_upd () {
 
 }
 
+# run proper iteration
+signing () {
+
+    if [[ -f $HOME/.sb/MOK.pem ]]; then
+        cd $HOME/.sb
+        sign_upd
+        exit 0
+    else
+        mok_creator
+        sign_upd
+        exit 0
+    fi
+
+}
+
+# runtime
 source <(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/main/src/linuxtoys.lib) || { echo "Unable to source lib."; exit 2; }
 depcheck
-if [[ -f $HOME/.sb/MOK.pem ]]; then
-    cd $HOME/.sb
-    sign_upd
-    exit 0
-else
-    mok_creator
-    sign_upd
-    exit 0
-fi
+# version checkers
+kver_psycachy=$(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/main/src/psy-krn)
+kver_url_latest=$(curl -s https://www.kernel.org | grep -A 1 'id="latest_link"' | awk 'NR==2' | grep -oP 'href="\K[^"]+')
+kver_latest=$(echo $kver_url_latest | grep -oP 'linux-\K[^"]+')
+# remove .tar.xz from version name
+kver_latest=$(basename $kver_latest .tar.xz)
+ver_psy="$kver_psycachy-psycachy"
+ver_cachy="$kver_latest-cachyos"
 
+# menu
+while :; do
+
+    CHOICE=$(whiptail --title "Secure Boot" --menu "Select your kernel edition:" 25 78 16 \
+        "PsyCachy" "$kver_psycachy" \
+        "CachyOS" "Latest" \
+        "Cancel" "" 3>&1 1>&2 2>&3)
+
+    exitstatus=$?
+    if [ $exitstatus != 0 ]; then
+        # Exit the script if the user presses Esc
+        break
+     fi
+
+    case $CHOICE in
+    PsyCachy) kver_sign="$ver_psy" && signing;;
+    CachyOS) kver_sign="$ver_cachy" && signing;;
+    Cancel | q) break ;;
+    *) echo "Invalid Option" ;;
+    esac
+
+done

@@ -9,9 +9,9 @@ string_mask             = utf8only
 prompt                  = no
 
 [ req_distinguished_name ]
-countryName             = <YOURcountrycode>
-stateOrProvinceName     = <YOURstate>
-localityName            = <YOURcity>
+countryName             = BR
+stateOrProvinceName     = BR
+localityName            = BR
 0.organizationName      = psygreg
 commonName              = Secure Boot Signing Key
 emailAddress            = psygreg@pm.me
