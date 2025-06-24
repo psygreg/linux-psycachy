@@ -560,12 +560,18 @@ do_things() {
 
 install_f () {
 
+    if [ "$_kv_name" == "$_kver_stable" ]; then
+        _kedition="${KERNEL_VERSION}-psycachy"
+    else
+        _kedition="${KERNEL_VERSION}-cachyos"
+    fi
+
     # Install compiled kernel
-    sudo dpkg -i $HOME/cachyos-deb/linux-$_kv_name/custom-kernel-$KERNEL_VERSION-$KERNEL_VERSION-1.deb $HOME/cachyos-deb/linux-$_kv_name/custom-kernel-headers-$KERNEL_VERSION-$KERNEL_VERSION-1.deb
+    sudo dpkg -i ${_bdir}/linux-${_kv_name}/linux-image-${_kedition}_${KERNEL_VERSION}_amd64.deb ${_bdir}/linux-${_kv_name}/linux-headers-${_kedition}_${KERNEL_VERSION}_amd64.deb
 
     # Create boot image and update grub
-    sudo update-initramfs -c -k $KERNEL_VERSION
-    sudo update-grub2
+    sudo update-initramfs -c -k $_kedition
+    sudo update-grub
 
 }
 
