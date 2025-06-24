@@ -2,7 +2,7 @@
 # dependency check
 depcheck () {
 
-    _packages=(mokutil sbsigntool wget curl openssl)
+    local _packages=(mokutil sbsigntool wget curl openssl)
     _install_
 
 }
@@ -15,7 +15,7 @@ mok_creator () {
     cd $HOME/.sb
     wget https://raw.githubusercontent.com/psygreg/linux-cachyos-deb/master/secureboot/mokconfig.cnf || { echo "Download failed"; exit 1; }
     # write country, province and locality with locale
-    COUNTRY_CODE=$(locale | grep -i "^lc_" | grep -m1 -oP "[A-Z]{2}(?=\b)" || echo "US")
+    local COUNTRY_CODE=$(locale | grep -i "^lc_" | grep -m1 -oP "[A-Z]{2}(?=\b)" || echo "US")
     sed -i \
         -e "s|countryName\s\+=\s\+<YOURcountrycode>|countryName             = ${COUNTRY_CODE}|" \
         -e "s|stateOrProvinceName\s\+=\s\+<YOURstate>|stateOrProvinceName     = ${COUNTRY_CODE}|" \
@@ -38,6 +38,8 @@ mok_creator () {
 sign_upd () {
 
     kver_sign=$(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/main/src/psy-krn)
+    local kernel_path="/boot/vmlinuz-${kver_sign}"
+    [[ -f "$kernel_path" ]] || { echo "Kernel not found: $kernel_path"; exit 3; }
     sudo sbsign --key MOK.priv --cert MOK.pem /boot/vmlinuz-${kver_sign} --output /boot/vmlinuz-${kver_sign}.signed
     sudo cp /boot/initrd.img-${kver_sign}{,.signed}
     sleep 1
