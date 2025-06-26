@@ -470,9 +470,11 @@ do_things() {
     fi
 
     # Implement AMD Pstates
-    local CPU_VENDOR=$(grep -m1 'vendor_id' /proc/cpuinfo)
-    if echo "$CPU_VENDOR" | grep -q "AuthenticAMD"; then
-        patches+=("${_patchsource}/0001-amd-pstate.patch")
+    if [ -z "$_is_generic" ]; then
+        local CPU_VENDOR=$(grep -m1 'vendor_id' /proc/cpuinfo)
+        if echo "$CPU_VENDOR" | grep -q "AuthenticAMD"; then
+            patches+=("${_patchsource}/0001-amd-pstate.patch")
+        fi
     fi
 
     # Add fixes
