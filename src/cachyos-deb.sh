@@ -387,7 +387,7 @@ EOF
     fi
 
     # Compile the kernel and modules
-    if [ "_kv_name" == "_kver_stable" ]; then
+    if [ "$_kv_name" == "$_kver_stable" ]; then
         make bindeb-pkg -j"$(nproc)" LOCALVERSION=-"psycachy" KDEB_PKGVERSION="$(make kernelversion)-1"
         #make -j$(nproc) KDEB_PKGVERSION=${_kver_stable}.psycachy-gen bindeb-pkg
     else
@@ -759,7 +759,7 @@ _kv_latest=$(basename $_kv_latest .tar.xz)
 
 # initialize variables for stable kernel
 _kver_stable_ref="6"
-_kver_stable="6.14.10"
+_kver_stable="6.14.11"
 _kv_url_stable="https://cdn.kernel.org/pub/linux/kernel/v${_kver_stable_ref}.x/linux-${_kver_stable}.tar.xz"
 
 # set default kernel setting to stable
