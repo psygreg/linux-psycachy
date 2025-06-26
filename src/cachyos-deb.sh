@@ -495,7 +495,7 @@ do_things() {
     for i in "${patches[@]}"; do
         echo "Downloading and applying $i"
         wget -c $i
-        patch -p1 <$(basename $i)
+        patch -Np1 <$(basename $i)
     done
 
     if [ -n "$_is_generic" ]; then
