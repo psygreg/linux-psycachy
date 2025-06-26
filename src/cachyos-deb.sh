@@ -236,6 +236,7 @@ configure_system_optimizations() {
     [[ "$selection" == *"VMA"* ]] && _vma="yes" || _vma="no"
     [[ "$selection" == *"DAMON"* ]] && _damon="yes" || _damon="no"
     [[ "$selection" == *"NUMA"* ]] && _numa="enable" || _numa="disable"
+
 }
 
 choose_kernel_option() {
@@ -462,6 +463,22 @@ do_things() {
         patches+=("${_patchsource}/misc/0001-rt-i915.patch"
             "${_patchsource}/sched/0001-bore.patch") ;;
     esac
+
+    # Add BBR3
+    if [ "$_bbr3" == "yes" ]; then
+        patches+=("${_patchsource}/0004-bbr3.patch")
+    fi
+
+    # Implement AMD Pstates
+    local CPU_VENDOR=$(grep -m1 'vendor_id' /proc/cpuinfo)
+    if echo "$CPU_VENDOR" | grep -q "AuthenticAMD"; then
+        patches+=("${_patchsource}/0001-amd-pstate.patch")
+    fi
+
+    # Add fixes
+    if curl --silent --head --fail "${_patchsource}/0007-fixes.patch" > /dev/null; then
+        patches+=("${_patchsource}/0007-fixes.patch")
+    fi
 
     # download and apply patches on source
     for i in "${patches[@]}"; do
