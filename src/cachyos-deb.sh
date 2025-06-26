@@ -508,8 +508,8 @@ do_things() {
     ./scripts/config -d CONFIG_MODULE_SIG_ALL -d CONFIG_MODULE_SIG_KEY -d CONFIG_SYSTEM_TRUSTED_KEYS
 
     case "$_cpusched_selection" in
-    cachyos) scripts/config -e SCHED_BORE -e SCHED_CLASS_EXT ;;
-    bore | hardened) scripts/config -e SCHED_BORE ;;
+    cachyos) scripts/config -e SCHED_BORE -e SCHED_CLASS_EXT -e BPF -e BPF_SYSCALL -e BPF_JIT -e DEBUG_INFO_BTF -e BPF_JIT_ALWAYS_ON -e BPF_JIT_DEFAULT_ON -e PAHOLE_HAS_SPLIT_BTF -e PAHOLE_HAS_BTF_TAG ;;
+    bore | hardened) scripts/config -e SCHED_BORE -e SCHED_CLASS_EXT -e BPF -e BPF_SYSCALL -e BPF_JIT -e DEBUG_INFO_BTF -e BPF_JIT_ALWAYS_ON -e BPF_JIT_DEFAULT_ON -e PAHOLE_HAS_SPLIT_BTF -e PAHOLE_HAS_BTF_TAG ;;
     eevdf) ;;
     rt) scripts/config -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -e PREEMPT_RT -d PREEMPT_DYNAMIC -d PREEMPT_BUILD ;;
     rt-bore) scripts/config -e SCHED_BORE -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -e PREEMPT_RT -d PREEMPT_DYNAMIC -d PREEMPT_BUILD ;;
