@@ -1,4 +1,4 @@
-# CachyOS Kernel Builder
+# PsyCachy & CachyOS Kernel Builder
 
 This repository contains a script for building the CachyOS kernel with various optimizations tailored to your system's CPU architecture. The script automates the process of configuring and optimizing the kernel build according to your hardware and preferences.
 
