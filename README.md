@@ -56,6 +56,7 @@ The script includes advanced configuration options for users who want to fine-tu
 - **LRU**: Configure the Least Recently Used memory management mechanism.
 - **O3 Optimization**: Apply O3 optimization for performance improvement.
 - **Performance Governor**: Set the CPU frequency scaling governor to performance.
+- **Modprobed.db**: will use the database built from `modprobed.db` to only build drivers specific to your machine. **WARNING:** use the default kernel with `modprobed.db` up and running for at least a week before building with this option to make sure all drivers you need are on the database, and **always** keep a default (or `psycachy` generic package) kernel as a backup!
 
 ## Contributing
 
