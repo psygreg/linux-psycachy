@@ -202,6 +202,7 @@ configure_system_optimizations() {
     local numa_status=$([ "$_numa" = "enable" ] && echo "ON" || echo "OFF")
     local zfs_status=$([ "$_zfs" = "yes" ] && echo "ON" || echo "OFF")
     local modprobed_status=$([ "$_modprobed_db" = "enable" ] && echo "ON" || echo "OFF")
+    local cconfs_status=$([ "$_cachy_confs" = "yes" ] && echo "ON" || echo "OFF")
 
     # Display checklist
     local selection
@@ -215,6 +216,7 @@ configure_system_optimizations() {
         "DAMON" "" $damon_status \
         "NUMA" "" $numa_status \
         "ZFS" "" $zfs_status \
+        "CachyOS Config Files" "" $cconfs_status \
         "Modprobed.db" "" $modprobed_status \
         3>&1 1>&2 2>&3)
 
@@ -239,6 +241,7 @@ configure_system_optimizations() {
     [[ "$selection" == *"DAMON"* ]] && _damon="yes" || _damon="no"
     [[ "$selection" == *"NUMA"* ]] && _numa="enable" || _numa="disable"
     [[ "$selection" == *"Modprobed.db"* ]] && _modprobed_db="enable" || _modprobed_db="disable"
+    [[ "$selection" == *"CachyOS Config Files"* ]] && _cachy_confs="yes" || _cachy_confs="no"
 
 }
 
@@ -594,9 +597,59 @@ install_f () {
     # Install compiled kernel
     sudo dpkg -i ${_bdir}/linux-${_kv_name}/linux-image-${_kedition}_${KERNEL_VERSION}_amd64.deb ${_bdir}/linux-${_kv_name}/linux-headers-${_kedition}_${KERNEL_VERSION}_amd64.deb
 
-    # Create boot image and update grub
-    sudo update-initramfs -c -k $_kedition
-    sudo update-grub
+    # apply system configs if chosen
+    if [ "$_cachy_confs" == "yes" ]; then
+        cachy_confs
+    fi
+
+}
+
+# get and apply cachyos configuration files
+cachy_confs () {
+
+    local _cfgsource="https://raw.githubusercontent.com/CachyOS/CachyOS-Settings/master/usr"
+    mkdir -p sysctl-config
+    sleep 1
+    cd sysctl-config
+    {
+        echo "${_cfgsource}/lib/udev/rules.d/20-audio-pm.rules"
+        echo "${_cfgsource}/lib/udev/rules.d/40-hpet-permissions.rules"
+        echo "${_cfgsource}/lib/udev/rules.d/50-sata.rules"
+        echo "${_cfgsource}/lib/udev/rules.d/60-ioschedulers.rules"
+        echo "${_cfgsource}/lib/udev/rules.d/69-hdparm.rules"
+        echo "${_cfgsource}/lib/udev/rules.d/99-cpu-dma-latency.rules"
+        } > "udev.txt"
+    {
+        echo "${_cfgsource}/lib/tmpfiles.d/coredump.conf"
+        echo "${_cfgsource}/lib/tmpfiles.d/thp-shrinker.conf"
+        echo "${_cfgsource}/lib/tmpfiles.d/thp.conf"
+        } > "tmpfiles.txt"
+    {
+        echo "${_cfgsource}/lib/modprobe.d/20-audio-pm.conf"
+        echo "${_cfgsource}/lib/modprobe.d/amdgpu.conf"
+        echo "${_cfgsource}/lib/modprobe.d/blacklist.conf"
+        } > "modprobe.txt"
+    {
+        echo "${_cfgsource}/lib/NetworkManager/conf.d/dns.conf"
+        echo "${_cfgsource}/lib/sysctl.d/99-cachyos-settings.conf"
+        echo "${_cfgsource}/lib/systemd/journald.conf.d/00-journal-size.conf"
+        echo "${_cfgsource}/share/X11/xorg.conf.d/20-touchpad.conf"
+        } > "other.txt"
+    sleep 1
+    while read -r url; do wget -P udev "$url"; done < udev.txt
+    while read -r url; do wget -P tmpfiles "$url"; done < tmpfiles.txt
+    while read -r url; do wget -P modprobe "$url"; done < modprobe.txt
+    while read -r url; do wget "$url"; done < other.txt
+    sleep 1
+    sudo cp -rf udev/* /usr/lib/udev/rules.d/
+    sudo cp -rf tmpfiles/* /usr/lib/tmpfiles.d/
+    sudo cp -rf modprobe/* /usr/lib/modprobe.d/
+    sudo cp -f dns.conf /usr/lib/NetworkManager/conf.d/
+    sudo cp -f 99-cachyos-settings.conf /usr/lib/sysctl.d/
+    sudo cp -f 00-journal-size.conf /usr/lib/systemd/journald.conf.d/
+    sudo cp -f 20-touchpad.conf /usr/share/X11/xorg.conf.d/
+    cd ..
+    rm -rf sysctl-config
 
 }
 
