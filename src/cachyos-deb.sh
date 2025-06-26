@@ -201,6 +201,7 @@ configure_system_optimizations() {
     local damon_status=$([ "$_damon" = "yes" ] && echo "ON" || echo "OFF")
     local numa_status=$([ "$_numa" = "enable" ] && echo "ON" || echo "OFF")
     local zfs_status=$([ "$_zfs" = "yes" ] && echo "ON" || echo "OFF")
+    local modprobed_status=$([ "$_modprobed_db" = "enable" ] && echo "ON" || echo "OFF")
 
     # Display checklist
     local selection
@@ -214,6 +215,7 @@ configure_system_optimizations() {
         "DAMON" "" $damon_status \
         "NUMA" "" $numa_status \
         "ZFS" "" $zfs_status \
+        "Modprobed.db" "" $modprobed_status \
         3>&1 1>&2 2>&3)
 
     # Update configurations based on the selection
@@ -236,6 +238,7 @@ configure_system_optimizations() {
     [[ "$selection" == *"VMA"* ]] && _vma="yes" || _vma="no"
     [[ "$selection" == *"DAMON"* ]] && _damon="yes" || _damon="no"
     [[ "$selection" == *"NUMA"* ]] && _numa="enable" || _numa="disable"
+    [[ "$selection" == *"Modprobed.db"* ]] && _modprobed_db="enable" || _modprobed_db="disable"
 
 }
 
@@ -376,6 +379,9 @@ EOF
     }
 
     make olddefconfig
+    if [ "$_modprobed_db" == "enable" ]; then
+        make localmodconfig
+    fi
 
     # Compile the kernel and modules
     if [ "_kv_name" == "_kver_stable" ]; then
