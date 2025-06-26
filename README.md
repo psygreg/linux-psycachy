@@ -9,6 +9,7 @@ Before running the script, ensure you have the following prerequisites installed
 - `gcc`: The GNU Compiler Collection is required for detecting the CPU architecture.
 - `whiptail`: For displaying dialog boxes in the script.
 - `curl`: For fetching the latest kernel version.
+- `rustc`: For building newer, Rust-based kernel modules.
 
 You can install these dependencies using your distribution's package manager.
 
@@ -35,6 +36,12 @@ To use the script, follow these steps:
    - Configure the CPU scheduler, LLVM LTO, tick rate, NR_CPUS, Hugepages, LRU, and other system optimizations.
    - Select the preempt type and tick type for further system tuning; or
 5. Install with optimized defaults and my custom 'stable' branch, which is updated roughly every two months, with `./cachyos-deb.sh -s`. This has been thoroughly tested on Debian Testing and Ubuntu (with Gnome, the standard Canonical flavour), but should work elsewhere without complications.
+
+### Launch options
+
+- `-b`: builds a `psycachy`-variant kernel with optimizations specific to your CPU `MARCH`. 
+- `-g`: builds the same `psycachy` generic image found in Releases. Meant just to generate those images.
+- `-c`: builds a `linux-cachyos` kernel with latest spec and settings.
 
 ## Advanced Configurations
 
