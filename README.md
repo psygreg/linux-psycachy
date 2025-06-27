@@ -7,6 +7,7 @@ This repository contains a script for building the CachyOS kernel with various o
 Before running the script, ensure you have the following prerequisites installed:
 
 - `gcc`: The GNU Compiler Collection is required for detecting the CPU architecture.
+- `clang`: Required for compiling the kernel.
 - `whiptail`: For displaying dialog boxes in the script.
 - `curl`: For fetching the latest kernel version.
 - `rustc`: For building newer, Rust-based kernel modules.
