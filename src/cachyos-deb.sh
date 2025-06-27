@@ -116,7 +116,7 @@ configure_cpusched() {
     _cpusched_selection=$(whiptail --title "CPU Scheduler Configuration" --radiolist \
         "Choose CPU Scheduler (use space to select):" 20 70 5 \
         "cachyos" "CachyOS BORE + SCHED-EXT scheduler" $([ "$_cpusched_selection" = "cachyos" ] && echo "ON" || echo "OFF") \
-        "bore" "BORE + SCHED-EXT scheduler" $([ "$_cpusched_selection" = "bore" ] && echo "ON" || echo "OFF") \
+        "bore" "BORE scheduler" $([ "$_cpusched_selection" = "bore" ] && echo "ON" || echo "OFF") \
         "rt" "Real-time preemption patch" $([ "$_cpusched_selection" = "rt" ] && echo "ON" || echo "OFF") \
         "rt-bore" "Real-time preemption with BORE scheduler" $([ "$_cpusched_selection" = "rt-bore" ] && echo "ON" || echo "OFF") \
         "none" "Do not configure CPU scheduler" $([ "$_cpusched_selection" = "none" ] && echo "ON" || echo "OFF") \
@@ -505,7 +505,7 @@ do_things() {
         ./scripts/config --disable CONFIG_GENERIC_CPU
         ./scripts/config --enable CONFIG_${MARCH2}
     fi
-    ./scripts/config -d CONFIG_MODULE_SIG_ALL -d CONFIG_MODULE_SIG_KEY -d CONFIG_SYSTEM_TRUSTED_KEYS
+    # ./scripts/config -d CONFIG_MODULE_SIG_ALL -d CONFIG_MODULE_SIG_KEY -d CONFIG_SYSTEM_TRUSTED_KEYS
 
     case "$_cpusched_selection" in
     cachyos) scripts/config -e SCHED_BORE -e SCHED_CLASS_EXT -e BPF -e BPF_SYSCALL -e BPF_JIT -e DEBUG_INFO_BTF -e BPF_JIT_ALWAYS_ON -e BPF_JIT_DEFAULT_ON -e PAHOLE_HAS_SPLIT_BTF -e PAHOLE_HAS_BTF_TAG ;;
