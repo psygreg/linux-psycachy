@@ -381,7 +381,11 @@ EOF
         rm -rf ${ZFS_PKG_DIR}
     }
 
-    make olddefconfig
+    if [ "$_llvm_lto_selection" == "thin" ] || [ "$_llvm_lto_selection" == "full" ]; then
+        make CC=clang LD=ld.lld LLVM=1 LLVM_IAS=1 olddefconfig
+    else
+        make olddefconfig
+    fi
     if [ "$_modprobed_db" == "enable" ]; then
         make localmodconfig
     fi
