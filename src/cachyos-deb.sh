@@ -607,7 +607,11 @@ install_f () {
     fi
 
     # Install compiled kernel
-    sudo dpkg -i ${_bdir}/linux-${_kv_name}/linux-image-${_kedition}_${KERNEL_VERSION}_amd64.deb ${_bdir}/linux-${_kv_name}/linux-headers-${_kedition}_${KERNEL_VERSION}_amd64.deb
+    sudo dpkg -i ${_bdir}/linux-image-${_kedition}_${KERNEL_VERSION}_amd64.deb ${_bdir}/linux-headers-${_kedition}_${KERNEL_VERSION}_amd64.deb ${_bdir}/linux-libc-dev-${KERNEL_VERSION}_${KERNEL_VERSION}_amd64.deb
+    # sign it if Secure Boot is enabled
+    if sudo mokutil --sb-state | grep -q "SecureBoot enabled"; then
+        bash <(curl -s https://raw.githubusercontent.com/psygreg/linux-cachyos-deb/refs/heads/master/secureboot/create-key.sh)
+    fi
 
     # apply system configs if chosen
     if [ "$_cachy_confs" == "yes" ]; then
@@ -778,9 +782,6 @@ _kv_url_stable="https://cdn.kernel.org/pub/linux/kernel/v${_kver_stable_ref}.x/l
 _kv_name=$_kver_stable
 _kv_url=$_kv_url_stable
 
-# call init script
-# display warning message saying this is a beta version
-
 # source linuxtoys lib
 source <(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/main/src/linuxtoys.lib)
 
@@ -828,8 +829,8 @@ whiptail --title "CachyOS Kernel Configuration" --msgbox "This is a beta version
 # say that the user will lose the ability to use secure boot and ask for confirmation
 whiptail --title "Secure Boot Warning" --yesno "This script will disable secure boot. Do you want to continue?" 8 78
 
+# call init script
 init_script
-
 
 # Main menu
 while :; do
