@@ -12,7 +12,7 @@ Before running the script, ensure you have the following prerequisites installed
 - `curl`: For fetching the latest kernel version.
 - `rustc`: For building newer, Rust-based kernel modules.
 
-You can install these dependencies using your distribution's package manager.
+You can install these dependencies using your distribution's package manager, or have `cachyos-deb.sh` install them for you.
 
 ## Features
 
