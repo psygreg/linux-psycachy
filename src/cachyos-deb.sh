@@ -503,6 +503,11 @@ do_things() {
         patches+=("${_patchsource}/0007-fixes.patch")
     fi
 
+    # Add ASUS to psycachy
+    if curl --silent --head --fail "${_patchsource}/0003-asus.patch" > /dev/null; then
+        patches+=("${_patchsource}/0003-asus.patch")
+    fi
+
     # download and apply patches on source
     for i in "${patches[@]}"; do
         echo "Downloading and applying $i"
