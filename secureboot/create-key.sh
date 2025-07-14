@@ -62,13 +62,18 @@ signing () {
 source <(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/main/src/linuxtoys.lib) || { echo "Unable to source lib."; exit 2; }
 depcheck
 # version checkers
-kver_psycachy=$(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/main/src/psy-krn)
+releases=$(curl -s "https://api.github.com/repos/psygreg/linux-psycachy/releases")
+lts_tag=$(echo "$releases" | jq -r '.[].tag_name' | grep -i '^LTS-' | sort -Vr | head -n 1)
+std_tag=$(echo "$releases" | jq -r '.[].tag_name' | grep -i '^STD-' | sort -Vr | head -n 1)
+kver_lts="${lts_tag#LTS-}"
+kver_psycachy="${std_tag#STD-}"
 kver_url_latest=$(curl -s https://www.kernel.org | grep -A 1 'id="latest_link"' | awk 'NR==2' | grep -oP 'href="\K[^"]+')
 kver_latest=$(echo $kver_url_latest | grep -oP 'linux-\K[^"]+')
 # remove .tar.xz from version name
 kver_latest=$(basename $kver_latest .tar.xz)
 ver_psy="$kver_psycachy-psycachy"
 ver_cachy="$kver_latest-cachyos"
+ver_psy_lts="$kver_lts-psycachy-lts"
 
 # flag for linuxtoys bypass
 if [ -n "$1" ]; then
@@ -81,6 +86,9 @@ if [ -n "$1" ]; then
     --linuxtoys | -l)
         kver_sign="$ver_psy" && signing
         ;;
+    --lts)
+        kver_sign="$ver_psy_lts" && signing
+        ;;
     esac
 fi
 
@@ -89,6 +97,7 @@ while :; do
 
     CHOICE=$(whiptail --title "Secure Boot" --menu "Select your kernel edition:" 25 78 16 \
         "PsyCachy" "$kver_psycachy" \
+        "PsyCachy-LTS" "$kver_lts" \
         "CachyOS" "Latest" \
         "Cancel" "" 3>&1 1>&2 2>&3)
 
@@ -100,6 +109,7 @@ while :; do
 
     case $CHOICE in
     PsyCachy) kver_sign="$ver_psy" && signing;;
+    PsyCachy-LTS) kver_sign="$ver_psy_lts" && signing;;
     CachyOS) kver_sign="$ver_cachy" && signing;;
     Cancel | q) break ;;
     *) echo "Invalid Option" ;;
