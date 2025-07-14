@@ -620,6 +620,11 @@ do_things() {
     none) scripts/config -d LRU_GEN ;;
     esac
 
+    # Apply OS optimization
+    if [ "$_o3_optimization" == "no" ]; then
+        scripts/config -d CC_OPTIMIZE_FOR_PERFORMANCE_O3 -e CC_OPTIMIZE_FOR_PERFORMANCE
+    fi
+
     # Apply O3 optimization
     if [ "$_o3_optimization" == "yes" ]; then
         scripts/config -d CC_OPTIMIZE_FOR_PERFORMANCE -e CC_OPTIMIZE_FOR_PERFORMANCE_O3
