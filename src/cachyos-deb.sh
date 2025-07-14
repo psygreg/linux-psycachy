@@ -253,7 +253,7 @@ choose_kernel_option() {
         CHOICE=$(whiptail --title "Kernel Version" --menu "Select:" 25 78 16 \
             "Latest" "$_kv_latest" \
             "Stable" "$_kver_stable" \
-            "LTS" "$_kver_lts"
+            "LTS" "$_kver_lts" \
             "Cancel" "" 3>&1 1>&2 2>&3)
 
         exitstatus=$?
