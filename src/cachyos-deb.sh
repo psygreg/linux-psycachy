@@ -400,6 +400,13 @@ EOF
             make bindeb-pkg -j"$(nproc)" LOCALVERSION=-"psycachy" KDEB_PKGVERSION="$(make kernelversion)-1"
             #make -j$(nproc) KDEB_PKGVERSION=${_kver_stable}.psycachy-gen bindeb-pkg
         fi
+    elif [ "$_kv_name" == "$_kver_lts" ]; then
+        if [ "$_llvm_lto_selection" == "thin" ] || [ "$_llvm_lto_selection" == "full" ]; then
+            make CC=clang LD=ld.lld LLVM=1 LLVM_IAS=1 bindeb-pkg -j"$(nproc)" LOCALVERSION=-"psycachy-lts" KDEB_PKGVERSION="$(make kernelversion)-1"
+        else
+            make bindeb-pkg -j"$(nproc)" LOCALVERSION=-"psycachy" KDEB_PKGVERSION="$(make kernelversion)-1"
+            #make -j$(nproc) KDEB_PKGVERSION=${_kver_stable}.psycachy-gen bindeb-pkg
+        fi
     else
         if [ "$_llvm_lto_selection" == "thin" ] || [ "$_llvm_lto_selection" == "full" ]; then
             make CC=clang LD=ld.lld LLVM=1 LLVM_IAS=1 bindeb-pkg -j"$(nproc)" LOCALVERSION=-"cachyos" KDEB_PKGVERSION="$(make kernelversion)-1"
