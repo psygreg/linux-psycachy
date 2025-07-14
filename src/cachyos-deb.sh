@@ -18,7 +18,6 @@ _bbr3="yes"
 _march="native"
 _preempt="preempt"
 _tick_type="nohz_full"
-_vma="no"
 _damon="no"
 _zfs="no"
 
@@ -197,7 +196,6 @@ configure_system_optimizations() {
     local os_status=$([ "$_os_optimization" = "yes" ] && echo "ON" || echo "OFF")
     local performance_status=$([ "$_performance_governor" = "yes" ] && echo "ON" || echo "OFF")
     local bbr3_status=$([ "$_bbr3" = "yes" ] && echo "ON" || echo "OFF")
-    local vma_status=$([ "$_vma" = "yes" ] && echo "ON" || echo "OFF")
     local damon_status=$([ "$_damon" = "yes" ] && echo "ON" || echo "OFF")
     local numa_status=$([ "$_numa" = "enable" ] && echo "ON" || echo "OFF")
     local zfs_status=$([ "$_zfs" = "yes" ] && echo "ON" || echo "OFF")
@@ -212,7 +210,6 @@ configure_system_optimizations() {
         "OS Optimization" "" $os_status \
         "Performance Governor" "" $performance_status \
         "TCP BBR3" "" $bbr3_status \
-        "VMA" "" $vma_status \
         "DAMON" "" $damon_status \
         "NUMA" "" $numa_status \
         "ZFS" "" $zfs_status \
@@ -237,7 +234,6 @@ configure_system_optimizations() {
 
     [[ "$selection" == *"Performance Governor"* ]] && _performance_governor="yes" || _performance_governor="no"
     [[ "$selection" == *"TCP BBR3"* ]] && _bbr3="yes" || _bbr3="no"
-    [[ "$selection" == *"VMA"* ]] && _vma="yes" || _vma="no"
     [[ "$selection" == *"DAMON"* ]] && _damon="yes" || _damon="no"
     [[ "$selection" == *"NUMA"* ]] && _numa="enable" || _numa="disable"
     [[ "$selection" == *"Modprobed.db"* ]] && _modprobed_db="enable" || _modprobed_db="disable"
@@ -856,11 +852,13 @@ if [ -n "$1" ]; then
         ;;
     --build-gen | -g)
         _is_generic="1"
+        _zfs="yes"
         builder
         exit 0
         ;;
     --build-lts | -l)
         _is_generic="1"
+        _zfs="yes"
         _kv_name=$_kver_lts
         _kv_url=$_kv_url_lts
         builder
