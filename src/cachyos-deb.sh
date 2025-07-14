@@ -11,7 +11,7 @@ _numa="enable"
 _hugepage="always"
 _lru_config="standard"
 _o3_optimization="no"
-_os_optimization="yes"
+_os_optimization="no"
 _performance_governor="no"
 _nr_cpus="320"
 _bbr3="yes"
@@ -620,14 +620,19 @@ do_things() {
     none) scripts/config -d LRU_GEN ;;
     esac
 
-    # Apply OS optimization
-    if [ "$_o3_optimization" == "no" ]; then
-        scripts/config -d CC_OPTIMIZE_FOR_PERFORMANCE_O3 -e CC_OPTIMIZE_FOR_PERFORMANCE
+    # Apply O2 optimization
+    if [ "$_o3_optimization" == "no" ] && [ "$_os_optimization" == "no" ]; then
+        scripts/config -d CC_OPTIMIZE_FOR_PERFORMANCE_O3 -d CC_OPTIMIZE_FOR_SIZE -e CC_OPTIMIZE_FOR_PERFORMANCE
     fi
 
     # Apply O3 optimization
     if [ "$_o3_optimization" == "yes" ]; then
-        scripts/config -d CC_OPTIMIZE_FOR_PERFORMANCE -e CC_OPTIMIZE_FOR_PERFORMANCE_O3
+        scripts/config -d CC_OPTIMIZE_FOR_PERFORMANCE -d CC_OPTIMIZE_FOR_SIZE -e CC_OPTIMIZE_FOR_PERFORMANCE_O3
+    fi
+
+    # Apply OS optimization
+    if [ "$_os_optimization" == "yes" ]; then
+        scripts/config -d CC_OPTIMIZE_FOR_PERFORMANCE -d CC_OPTIMIZE_FOR_PERFORMANCE_O3 -e CC_OPTIMIZE_FOR_SIZE
     fi
 
     # Apply performance governor
