@@ -253,6 +253,7 @@ choose_kernel_option() {
         CHOICE=$(whiptail --title "Kernel Version" --menu "Select:" 25 78 16 \
             "Latest" "$_kv_latest" \
             "Stable" "$_kver_stable" \
+            "LTS" "$_kver_lts"
             "Cancel" "" 3>&1 1>&2 2>&3)
 
         exitstatus=$?
@@ -264,6 +265,7 @@ choose_kernel_option() {
         case $CHOICE in
         Latest) _kv_name=$_kv_latest && _kv_url=$_kv_url_latest;;
         Stable) _kv_name=$_kver_stable && _kv_url=$_kv_url_stable;;
+        LTS) _kv_name=$_kver_lts && _kv_url=$_kv_url_lts;;
         Cancel | q) break ;;
         *) echo "Invalid Option" ;;
         esac
@@ -457,8 +459,10 @@ do_things() {
     # get cachyos .config
     if [ "$_kv_name" = "$_kv_latest" ]; then
         wget -c https://raw.githubusercontent.com/CachyOS/linux-cachyos/master/linux-cachyos/config -O .config
-    else
+    elif [ "$_kv_name" = "$_kver_stable" ]; then
         wget -c https://raw.githubusercontent.com/psygreg/linux-cachyos-deb/master/src/config -O .config
+    else
+        wget -c https://raw.githubusercontent.com/psygreg/linux-cachyos-deb/master/src/config-lts -O .config
     fi
 
     local _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}.${_mid}"
@@ -485,27 +489,50 @@ do_things() {
             "${_patchsource}/sched/0001-bore.patch") ;;
     esac
 
-    # Add BBR3
+    # Add BBR3 ## check EVERY RELEASE
     if [ "$_bbr3" == "yes" ]; then
-        patches+=("${_patchsource}/0004-bbr3.patch")
-    fi
-
-    # Implement AMD Pstates
-    if [ -z "$_is_generic" ]; then
-        local CPU_VENDOR=$(grep -m1 'vendor_id' /proc/cpuinfo)
-        if echo "$CPU_VENDOR" | grep -q "AuthenticAMD"; then
-            patches+=("${_patchsource}/0001-amd-pstate.patch")
+        if [ "$_kv_name" = "$_kver_stable" ]; then
+            patches+=("${_patchsource}/0004-bbr3.patch")
+        elif [ "$_kv_name" = "$_kver_lts" ]; then
+            patches+=("${_patchsource}/0002-bbr3.patch")
         fi
     fi
 
-    # Add fixes
-    if curl --silent --head --fail "${_patchsource}/0007-fixes.patch" > /dev/null; then
-        patches+=("${_patchsource}/0007-fixes.patch")
+    # Implement AMD Pstates ## check EVERY RELEASE
+    if [ -z "$_is_generic" ]; then
+        local CPU_VENDOR=$(grep -m1 'vendor_id' /proc/cpuinfo)
+        if echo "$CPU_VENDOR" | grep -q "AuthenticAMD"; then
+            if [ "$_kv_name" = "$_kver_stable" ]; then
+                patches+=("${_patchsource}/0001-amd-pstate.patch")
+            elif [ "$_kv_name" = "$_kver_lts" ]; then
+                patches+=("${_patchsource}/0001-amd-cache-optimizer.patch")
+            fi
+        fi
     fi
 
-    # Add ASUS to psycachy
-    if curl --silent --head --fail "${_patchsource}/0003-asus.patch" > /dev/null; then
-        patches+=("${_patchsource}/0003-asus.patch")
+    # Add fixes ## check EVERY RELEASE
+    if [ "$_kv_name" = "$_kver_stable" ]; then
+        if curl --silent --head --fail "${_patchsource}/0007-fixes.patch" > /dev/null; then
+            patches+=("${_patchsource}/0007-fixes.patch")
+        fi
+    elif [ "$_kv_name" = "$_kver_lts" ]; then
+        if curl --silent --head --fail "${_patchsource}/0004-fixes.patch" > /dev/null; then
+            patches+=("${_patchsource}/0004-fixes.patch")
+        fi
+    fi
+
+    # Additional patches to 6.12 LTS
+    if [ "$_kv_name" = "$_kver_lts" ]; then
+        patches+=("${_patchsource}/0005-ntsync.patch"
+            "${_patchsource}/0006-perf-per-core.patch"
+            "${_patchsource}/misc/dkms-clang.patch")
+    fi
+
+    # Add ASUS to psycachy ## check EVERY RELEASE
+    if [ "$_kv_name" = "$_kver_stable" ]; then
+        if curl --silent --head --fail "${_patchsource}/0003-asus.patch" > /dev/null; then
+            patches+=("${_patchsource}/0003-asus.patch")
+        fi
     fi
 
     # download and apply patches on source
@@ -767,7 +794,9 @@ builder () {
         build_dir="$HOME"
     fi
     check_deps
-    init_script
+    if [ -z "$_is_generic" ]; then
+        init_script
+    fi
     do_things
 
 }
@@ -782,6 +811,11 @@ _kv_latest=$(basename $_kv_latest .tar.xz)
 _kver_stable_ref="6"
 _kver_stable="6.14.11"
 _kv_url_stable="https://cdn.kernel.org/pub/linux/kernel/v${_kver_stable_ref}.x/linux-${_kver_stable}.tar.xz"
+
+# initialize variables for LTS kernel
+_kver_lts_ref="6"
+_kver_lts="6.12.37"
+_kv_url_lts="https://cdn.kernel.org/pub/linux/kernel/v${_kver_lts_ref}.x/linux-${_kver_lts}.tar.xz"
 
 # set default kernel setting to stable
 _kv_name=$_kver_stable
@@ -805,6 +839,13 @@ if [ -n "$1" ]; then
         ;;
     --build-gen | -g)
         _is_generic="1"
+        builder
+        exit 0
+        ;;
+    --build-lts | -l)
+        _is_generic="1"
+        _kv_name=$_kver_lts
+        _kv_url=$_kv_url_lts
         builder
         exit 0
         ;;
