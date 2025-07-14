@@ -395,23 +395,23 @@ EOF
     # Compile the kernel and modules
     if [ "$_kv_name" == "$_kver_stable" ]; then
         if [ "$_llvm_lto_selection" == "thin" ] || [ "$_llvm_lto_selection" == "full" ]; then
-            make CC=clang LD=ld.lld LLVM=1 LLVM_IAS=1 bindeb-pkg -j"$(nproc)" LOCALVERSION=-"psycachy" KDEB_PKGVERSION="$(make kernelversion)-1"
+            make CC=clang LD=ld.lld LLVM=1 LLVM_IAS=1 bindeb-pkg -j"$(($(nproc) - 1))" LOCALVERSION=-"psycachy" KDEB_PKGVERSION="$(make kernelversion)-1"
         else
-            make bindeb-pkg -j"$(nproc)" LOCALVERSION=-"psycachy" KDEB_PKGVERSION="$(make kernelversion)-1"
+            make bindeb-pkg -j"$(($(nproc) - 1))" LOCALVERSION=-"psycachy" KDEB_PKGVERSION="$(make kernelversion)-1"
             #make -j$(nproc) KDEB_PKGVERSION=${_kver_stable}.psycachy-gen bindeb-pkg
         fi
     elif [ "$_kv_name" == "$_kver_lts" ]; then
         if [ "$_llvm_lto_selection" == "thin" ] || [ "$_llvm_lto_selection" == "full" ]; then
-            make CC=clang LD=ld.lld LLVM=1 LLVM_IAS=1 bindeb-pkg -j"$(nproc)" LOCALVERSION=-"psycachy-lts" KDEB_PKGVERSION="$(make kernelversion)-1"
+            make CC=clang LD=ld.lld LLVM=1 LLVM_IAS=1 bindeb-pkg -j"$(($(nproc) - 1))" LOCALVERSION=-"psycachy-lts" KDEB_PKGVERSION="$(make kernelversion)-1"
         else
-            make bindeb-pkg -j"$(nproc)" LOCALVERSION=-"psycachy" KDEB_PKGVERSION="$(make kernelversion)-1"
+            make bindeb-pkg -j"$(($(nproc) - 1))" LOCALVERSION=-"psycachy" KDEB_PKGVERSION="$(make kernelversion)-1"
             #make -j$(nproc) KDEB_PKGVERSION=${_kver_stable}.psycachy-gen bindeb-pkg
         fi
     else
         if [ "$_llvm_lto_selection" == "thin" ] || [ "$_llvm_lto_selection" == "full" ]; then
-            make CC=clang LD=ld.lld LLVM=1 LLVM_IAS=1 bindeb-pkg -j"$(nproc)" LOCALVERSION=-"cachyos" KDEB_PKGVERSION="$(make kernelversion)-1"
+            make CC=clang LD=ld.lld LLVM=1 LLVM_IAS=1 bindeb-pkg -j"$(($(nproc) - 1))" LOCALVERSION=-"cachyos" KDEB_PKGVERSION="$(make kernelversion)-1"
         else
-            make bindeb-pkg -j"$(nproc)" LOCALVERSION=-"cachyos" KDEB_PKGVERSION="$(make kernelversion)-1"
+            make bindeb-pkg -j"$(($(nproc) - 1))" LOCALVERSION=-"cachyos" KDEB_PKGVERSION="$(make kernelversion)-1"
         fi
     fi
 
@@ -425,7 +425,7 @@ EOF
             --libdir=/usr/lib --datadir=/usr/share --includedir=/usr/include \
             --with-udevdir=/lib/udev --libexecdir=/usr/lib/zfs --with-config=kernel \
             --with-linux=$(LINUX_DIR)
-        make -j$(nproc)
+        make -j"$(($(nproc) - 1))"
         cd $LINUX_DIR
     fi
 
