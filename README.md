@@ -1,4 +1,4 @@
-# PsyCachy & CachyOS Kernel Builder
+# PsyCachy Kernel Builder
 
 This repository contains a script for building the CachyOS kernel with various optimizations tailored to your system's CPU architecture. The script automates the process of configuring and optimizing the kernel build according to your hardware and preferences.
 
@@ -44,7 +44,7 @@ To use the script, follow these steps:
 - `-b`: builds a `psycachy`-variant kernel with optimizations specific to your CPU `MARCH`. 
 - `-g`: builds the same `psycachy` generic image found in Releases. Meant just to generate those images.
 - `-l`: builds the same `psycachy-lts` generic image found in Releases. Meant just to generate those images.
-- `-c`: builds a `linux-cachyos` kernel with latest spec and settings.
+- `-c`: builds a `linux-cachyos` kernel with latest spec and settings. This is not guaranteed to work, as it uses CachyOS's defaults.
 
 ## Advanced Configurations
 
