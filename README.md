@@ -50,7 +50,7 @@ To use the script, follow these steps:
 
 The script includes advanced configuration options for users who want to fine-tune their kernel:
 
-- **CachyOS Configuration**: Enable optimizations specific to CachyOS.
+- **CachyOS Configuration**: Enable all optimizations from CachyOS. This is not guaranteed to work.
 - **CPU Scheduler**: Choose between different schedulers like Cachy, PDS, or none.
 - **LLVM LTO**: Select between Thin and Full LTO for better optimization.
 - **Tick Rate**: Configure the kernel tick rate according to your system's needs.
