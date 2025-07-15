@@ -11,6 +11,7 @@ Before running the script, ensure you have the following prerequisites installed
 - `whiptail`: For displaying dialog boxes in the script.
 - `curl`: For fetching the latest kernel version.
 - `rustc`: For building newer, Rust-based kernel modules.
+- `debhelper`: For packaging.
 
 You can install these dependencies using your distribution's package manager, or have `cachyos-deb.sh` install them for you.
 
@@ -42,6 +43,7 @@ To use the script, follow these steps:
 
 - `-b`: builds a `psycachy`-variant kernel with optimizations specific to your CPU `MARCH`. 
 - `-g`: builds the same `psycachy` generic image found in Releases. Meant just to generate those images.
+- `-l`: builds the same `psycachy-lts` generic image found in Releases. Meant just to generate those images.
 - `-c`: builds a `linux-cachyos` kernel with latest spec and settings.
 
 ## Advanced Configurations
