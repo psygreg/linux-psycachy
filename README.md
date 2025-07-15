@@ -1,7 +1,15 @@
-# PsyCachy Kernel Builder
+# PsyCachy Kernel
 
-This repository contains a script for building the CachyOS kernel with various optimizations tailored to your system's CPU architecture. The script automates the process of configuring and optimizing the kernel build according to your hardware and preferences.
+This repository contains the releases of the `linux-psycachy` and `linux-psycachy-lts` kernels, and the script for building it. The script may automate the process of configuring and optimizing the kernel build according to your hardware and preferences.
 
+## Recommended usage
+Install the kernel image of your choice from [Releases](https://github.com/psygreg/linux-psycachy/releases). 
+
+### Choosing your kernel
+- `linux-psycachy` is more up-to-date on features, and follows a predictable release schedule of about every two months, enough time for each kernel release to mature enough to be unproblematic.
+- `linux-psycachy-lts` offers a more stable and secure choice, following upstream releases of the latest version marked as ***longterm*** from [The Linux Kernel Archives](https://kernel.org/).
+
+# Building
 ## Prerequisites
 
 Before running the script, ensure you have the following prerequisites installed:
