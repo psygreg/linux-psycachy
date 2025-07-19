@@ -19,7 +19,7 @@ Install the kernel image of your choice from [Releases](https://github.com/psygr
 - Download **all three** .deb packages
 - Open terminal in the same directory of the packages
 - `sudo dpkg -i linux-image-psycachy_6.14.11-1_amd64.deb linux-headers-psycachy_6.14.11-1_amd64.deb linux-libc-dev_6.14.11-1_amd64.deb`
-- To install CachyOS SystemD configuration files as well to maximize effectiveness, download and run `cachyos-confs.sh` available from *Releases*.
+- To install CachyOS SystemD configuration files as well to maximize effectiveness, download and run `cachyconfs.sh` available from *Releases*.
 
 ## Secure Boot
 You can make the kernel compatible with Secure Boot by signing it using `create-key.sh` available from *Releases*. Remember to store the password you set when the keypair is created carefully.
