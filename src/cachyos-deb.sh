@@ -24,7 +24,7 @@ _zfs="no"
 check_deps() {
 
     # List of dependencies to check
-    local _packages=(whiptail gcc git libncurses-dev curl gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf llvm rustc rust-llvm bc rsync clang python-is-python3 perl gettext cpio pahole lld debhelper dwarves zstd)
+    local _packages=(whiptail gcc git libncurses-dev curl gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf make llvm rustc rust-llvm bc rsync clang python-is-python3 perl gettext cpio pahole lld debhelper dwarves zstd)
 
     # Iterate over dependencies and check each one
     _install_
@@ -694,7 +694,6 @@ cachy_confs () {
         echo "${_cfgsource}/lib/modprobe.d/blacklist.conf"
         } > "modprobe.txt"
     {
-        echo "${_cfgsource}/lib/NetworkManager/conf.d/dns.conf"
         echo "${_cfgsource}/lib/sysctl.d/99-cachyos-settings.conf"
         echo "${_cfgsource}/lib/systemd/journald.conf.d/00-journal-size.conf"
         echo "${_cfgsource}/share/X11/xorg.conf.d/20-touchpad.conf"
@@ -708,7 +707,6 @@ cachy_confs () {
     sudo cp -rf udev/* /usr/lib/udev/rules.d/
     sudo cp -rf tmpfiles/* /usr/lib/tmpfiles.d/
     sudo cp -rf modprobe/* /usr/lib/modprobe.d/
-    sudo cp -f dns.conf /usr/lib/NetworkManager/conf.d/
     sudo cp -f 99-cachyos-settings.conf /usr/lib/sysctl.d/
     sudo cp -f 00-journal-size.conf /usr/lib/systemd/journald.conf.d/
     sudo cp -f 20-touchpad.conf /usr/share/X11/xorg.conf.d/
@@ -852,13 +850,11 @@ if [ -n "$1" ]; then
         ;;
     --build-gen | -g)
         _is_generic="1"
-        _zfs="yes"
         builder
         exit 0
         ;;
     --build-lts | -l)
         _is_generic="1"
-        _zfs="yes"
         _kv_name=$_kver_lts
         _kv_url=$_kv_url_lts
         builder
