@@ -794,8 +794,7 @@ kernel_upd () {
 builder () {
 
     source <(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/main/src/linuxtoys.lib)
-    _bdir=""
-    _bdir=$(whiptail --inputbox "Enter path for temporary buildfiles. Leave empty to use ${HOME}." 10 30 3>&1 1>&2 2>&3)
+    _bdir="$(pwd)"
     if [ -n "$_bdir" ]; then
         if [ -d "$_bdir" ]; then
             build_dir="$_bdir"
@@ -803,8 +802,6 @@ builder () {
             whiptail --title "Error" --msgbox "Invalid path for buildfiles, try again." 8 60
             return
         fi
-    else
-        build_dir="$HOME"
     fi
     check_deps
     if [ -z "$_is_generic" ]; then
