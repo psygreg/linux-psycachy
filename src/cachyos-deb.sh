@@ -24,7 +24,7 @@ _zfs="no"
 check_deps() {
 
     # List of dependencies to check
-    local _packages=(whiptail gcc git libncurses-dev curl gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf llvm rustc rust-llvm bc rsync clang python-is-python3 perl gettext cpio pahole lld debhelper dwarves)
+    local _packages=(whiptail gcc git libncurses-dev curl gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf llvm rustc rust-llvm bc rsync clang python-is-python3 perl gettext cpio pahole lld debhelper dwarves zstd)
 
     # Iterate over dependencies and check each one
     _install_
