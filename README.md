@@ -2,12 +2,27 @@
 
 This repository contains the releases of the `linux-psycachy` and `linux-psycachy-lts` kernels, and the script for building it. The script may automate the process of configuring and optimizing the kernel build according to your hardware and preferences.
 
-## Recommended usage
-Install the kernel image of your choice from [Releases](https://github.com/psygreg/linux-psycachy/releases). 
+# What's this about?
+PsyCachy is a kernel with improved settings for compatibility and stability across Debian/Ubuntu Linux distributions derived from linux-cachyos. 
+### Differences to `linux-cachyos`
+- Doesn't include processor architecture-specific optimizations, as they bring too small gains to justify the time compiling them or the confusion caused to newcomers by multiple kernel versions on release - you can include those by building the kernel yourself running cachyos-deb.sh with -b option if you wish.
+- Doesn't include handheld console drivers, as there isn't much of a point on doing it for Debian/Ubuntu.
+- OS/-o2 optimization instead of -o3, which caused quite a few problems with Debian/Ubuntu packages.
 
+# Recommended usage
+Install the kernel image of your choice from [Releases](https://github.com/psygreg/linux-psycachy/releases) or through [LinuxToys](https://github.com/psygreg/linuxtoys). 
 ### Choosing your kernel
 - `linux-psycachy` is more up-to-date on features, and follows a predictable release schedule of about every two months, enough time for each kernel release to mature enough to be unproblematic.
 - `linux-psycachy-lts` offers a more stable and secure choice, following upstream releases of the latest version marked as ***longterm*** from [The Linux Kernel Archives](https://kernel.org/).
+
+## Manual installation
+- Download **all three** .deb packages
+- Open terminal in the same directory of the packages
+- `sudo dpkg -i linux-image-psycachy_6.14.11-1_amd64.deb linux-headers-psycachy_6.14.11-1_amd64.deb linux-libc-dev_6.14.11-1_amd64.deb`
+
+## Secure Boot
+You can make the kernel compatible with Secure Boot by signing it using create-key.sh. Remember to store the password you set when the keypair is created carefully.
+Differences to linux-cachyos
 
 # Building
 ## Prerequisites
