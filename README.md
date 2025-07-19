@@ -5,7 +5,7 @@ This repository contains the releases of the `linux-psycachy` and `linux-psycach
 # What's this about?
 PsyCachy is a kernel with improved settings for compatibility and stability across Debian/Ubuntu Linux distributions derived from linux-cachyos. 
 ### Differences to `linux-cachyos`
-- Doesn't include processor architecture-specific optimizations, as they bring too small gains to justify the time compiling them or the confusion caused to newcomers by multiple kernel versions on release - you can include those by building the kernel yourself running cachyos-deb.sh with -b option if you wish.
+- Doesn't include processor architecture-specific optimizations, as they bring too small gains to justify the time compiling them or the confusion caused to newcomers by multiple kernel versions on release - you can include those by building the kernel yourself running `cachyos-deb.sh` with `-b` option if you wish.
 - Doesn't include handheld console drivers, as there isn't much of a point on doing it for Debian/Ubuntu.
 - OS/-o2 optimization instead of -o3, which caused quite a few problems with Debian/Ubuntu packages.
 
