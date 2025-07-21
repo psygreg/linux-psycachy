@@ -537,7 +537,7 @@ do_things() {
 
     # Add ASUS to psycachy ## check EVERY RELEASE
     if [ "$_kv_name" = "$_kver_stable" ]; then
-        if curl --silent --head --fail "${_patchsource}/0003-asus.patch" > /dev/null; then
+        if curl --silent --head --fail "${_patchsource}/0002-asus.patch" > /dev/null; then
             patches+=("${_patchsource}/0002-asus.patch")
         fi
     fi
