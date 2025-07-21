@@ -498,7 +498,7 @@ do_things() {
     # Add BBR3 ## check EVERY RELEASE
     if [ "$_bbr3" == "yes" ]; then
         if [ "$_kv_name" = "$_kver_stable" ]; then
-            patches+=("${_patchsource}/0004-bbr3.patch")
+            patches+=("${_patchsource}/0003-bbr3.patch")
         elif [ "$_kv_name" = "$_kver_lts" ]; then
             patches+=("${_patchsource}/0002-bbr3.patch")
         fi
@@ -519,7 +519,7 @@ do_things() {
     # Add fixes ## check EVERY RELEASE
     if [ "$_kv_name" = "$_kver_stable" ]; then
         if curl --silent --head --fail "${_patchsource}/0007-fixes.patch" > /dev/null; then
-            patches+=("${_patchsource}/0007-fixes.patch")
+            patches+=("${_patchsource}/0005-fixes.patch")
         fi
     elif [ "$_kv_name" = "$_kver_lts" ]; then
         if curl --silent --head --fail "${_patchsource}/0004-fixes.patch" > /dev/null; then
@@ -531,15 +531,29 @@ do_things() {
     if [ "$_kv_name" = "$_kver_lts" ]; then
         patches+=("${_patchsource}/0005-ntsync.patch"
             "${_patchsource}/0006-perf-per-core.patch"
-            "${_patchsource}/misc/dkms-clang.patch")
+            "${_patchsource}/misc/nvidia/0002-CFLAGS-Set-std-gnu17-for-all-compilation-flags.patch"
+            "${_patchsource}/0008-zstd.patch")
     fi
 
     # Add ASUS to psycachy ## check EVERY RELEASE
     if [ "$_kv_name" = "$_kver_stable" ]; then
         if curl --silent --head --fail "${_patchsource}/0003-asus.patch" > /dev/null; then
-            patches+=("${_patchsource}/0003-asus.patch")
+            patches+=("${_patchsource}/0002-asus.patch")
         fi
     fi
+
+    # improve compatibility with dkms modules
+    patches+=("${_patchsource}/misc/dkms-clang.patch")
+    # enable ACPI calls for modules
+    patches+=("${_patchsource}/misc/0001-acpi-call.patch")
+
+    # patches for Nvidia kernel modules -- from 6.15 onwards -- check EVERY RELEASE
+    patches+=("${_patchsource}/misc/nvidia/0001-Enable-atomic-kernel-modesetting-by-default.patch"
+        "${_patchsource}/misc/nvidia/0002-Add-IBT-support.patch"
+        "${_patchsource}/misc/nvidia/0003-Kbuild-Convert-EXTRA_CFLAGS-to-ccflags-y.patch"
+        "${_patchsource}/misc/nvidia/0005-nvidia-uvm-Use-__iowrite64_hi_lo.patch"
+        "${_patchsource}/misc/nvidia/0006-nvidia-uvm-Use-page_pgmap.patch"
+        "${_patchsource}/misc/nvidia/0007-nvidia-uvm-Convert-make_device_exclusive_range-to-ma.patch")
 
     # download and apply patches on source
     for i in "${patches[@]}"; do
