@@ -531,7 +531,6 @@ do_things() {
     if [ "$_kv_name" = "$_kver_lts" ]; then
         patches+=("${_patchsource}/0005-ntsync.patch"
             "${_patchsource}/0006-perf-per-core.patch"
-            "${_patchsource}/misc/nvidia/0002-CFLAGS-Set-std-gnu17-for-all-compilation-flags.patch"
             "${_patchsource}/0008-zstd.patch")
     fi
 
