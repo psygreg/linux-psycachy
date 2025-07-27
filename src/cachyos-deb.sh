@@ -547,12 +547,12 @@ do_things() {
     patches+=("${_patchsource}/misc/0001-acpi-call.patch")
 
     # patches for Nvidia kernel modules -- from 6.15 onwards -- check EVERY RELEASE
-    patches+=("${_patchsource}/misc/nvidia/0001-Enable-atomic-kernel-modesetting-by-default.patch"
+    patches+=(#"${_patchsource}/misc/nvidia/0001-Enable-atomic-kernel-modesetting-by-default.patch"
         "${_patchsource}/misc/nvidia/0002-Add-IBT-support.patch"
         "${_patchsource}/misc/nvidia/0003-Kbuild-Convert-EXTRA_CFLAGS-to-ccflags-y.patch"
-        "${_patchsource}/misc/nvidia/0005-nvidia-uvm-Use-__iowrite64_hi_lo.patch"
-        "${_patchsource}/misc/nvidia/0006-nvidia-uvm-Use-page_pgmap.patch"
-        "${_patchsource}/misc/nvidia/0007-nvidia-uvm-Convert-make_device_exclusive_range-to-ma.patch")
+        #"${_patchsource}/misc/nvidia/0005-nvidia-uvm-Use-__iowrite64_hi_lo.patch"
+        #"${_patchsource}/misc/nvidia/0006-nvidia-uvm-Use-page_pgmap.patch"
+        #"${_patchsource}/misc/nvidia/0007-nvidia-uvm-Convert-make_device_exclusive_range-to-ma.patch")
 
     # download and apply patches on source
     for i in "${patches[@]}"; do
