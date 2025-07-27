@@ -548,7 +548,7 @@ do_things() {
 
     # patches for Nvidia kernel modules -- from 6.15 onwards -- check EVERY RELEASE
     patches+=(#"${_patchsource}/misc/nvidia/0001-Enable-atomic-kernel-modesetting-by-default.patch"
-        "${_patchsource}/misc/nvidia/0002-Add-IBT-support.patch"
+        #"${_patchsource}/misc/nvidia/0002-Add-IBT-support.patch"
         "${_patchsource}/misc/nvidia/0003-Kbuild-Convert-EXTRA_CFLAGS-to-ccflags-y.patch")
         #"${_patchsource}/misc/nvidia/0005-nvidia-uvm-Use-__iowrite64_hi_lo.patch"
         #"${_patchsource}/misc/nvidia/0006-nvidia-uvm-Use-page_pgmap.patch"
