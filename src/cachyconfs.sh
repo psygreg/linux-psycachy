@@ -20,6 +20,7 @@ cd sysctl-config
     echo "${_cfgsource}/lib/modprobe.d/20-audio-pm.conf"
     echo "${_cfgsource}/lib/modprobe.d/amdgpu.conf"
     echo "${_cfgsource}/lib/modprobe.d/blacklist.conf"
+    echo "${_cfgsource}/lib/modprobe.d/nvidia.conf"
     } > "modprobe.txt"
 {
     echo "${_cfgsource}/lib/sysctl.d/99-cachyos-settings.conf"
