@@ -21,6 +21,27 @@ _tick_type="nohz_full"
 _damon="no"
 _zfs="no"
 
+# whiptail color palette
+export NEWT_COLORS='
+    root=white,black
+    border=black,lightgray
+    window=black,lightgray
+    shadow=black,gray
+    title=black,lightgray
+    button=black,red
+    actbutton=white,red
+    checkbox=black,lightgray
+    actcheckbox=black,red
+    entry=black,lightgray
+    label=black,lightgray
+    listbox=black,lightgray
+    actlistbox=black,red
+    textbox=black,lightgray
+    acttextbox=black,red
+    helpline=white,red
+    roottext=black,lightgray
+'
+
 check_deps() {
 
     # List of dependencies to check
@@ -845,7 +866,7 @@ _kv_url_lts="https://cdn.kernel.org/pub/linux/kernel/v${_kver_lts_ref}.x/linux-$
 _kv_name=$_kver_stable
 _kv_url=$_kv_url_stable
 
-# source linuxtoys lib
+# source linuxtoys lib -- fix when LT5 is out!
 source <(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/main/src/linuxtoys.lib)
 
 # check if any argument was passed

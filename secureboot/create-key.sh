@@ -58,7 +58,7 @@ signing () {
 
 }
 
-# runtime
+# runtime -- FIX SOURCE WHEN LT5 IS OUT!!
 source <(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/main/src/linuxtoys.lib) || { echo "Unable to source lib."; exit 2; }
 depcheck
 # version checkers
