@@ -539,7 +539,7 @@ do_things() {
 
     # Add fixes ## check EVERY RELEASE
     if [ "$_kv_name" = "$_kver_stable" ]; then
-        if curl --silent --head --fail "${_patchsource}/0007-fixes.patch" > /dev/null; then
+        if curl --silent --head --fail "${_patchsource}/0005-fixes.patch" > /dev/null; then
             patches+=("${_patchsource}/0005-fixes.patch")
         fi
     elif [ "$_kv_name" = "$_kver_lts" ]; then
@@ -854,12 +854,12 @@ _kv_latest=$(basename $_kv_latest .tar.xz)
 
 # initialize variables for stable kernel
 _kver_stable_ref="6"
-_kver_stable="6.14.11"
+_kver_stable="6.15.10"
 _kv_url_stable="https://cdn.kernel.org/pub/linux/kernel/v${_kver_stable_ref}.x/linux-${_kver_stable}.tar.xz"
 
 # initialize variables for LTS kernel
 _kver_lts_ref="6"
-_kver_lts="6.12.41"
+_kver_lts="6.12.42"
 _kv_url_lts="https://cdn.kernel.org/pub/linux/kernel/v${_kver_lts_ref}.x/linux-${_kver_lts}.tar.xz"
 
 # set default kernel setting to stable
