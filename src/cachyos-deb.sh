@@ -859,7 +859,7 @@ _kv_url_stable="https://cdn.kernel.org/pub/linux/kernel/v${_kver_stable_ref}.x/l
 
 # initialize variables for LTS kernel
 _kver_lts_ref="6"
-_kver_lts="6.12.42"
+_kver_lts="6.12.44"
 _kv_url_lts="https://cdn.kernel.org/pub/linux/kernel/v${_kver_lts_ref}.x/linux-${_kver_lts}.tar.xz"
 
 # set default kernel setting to stable
