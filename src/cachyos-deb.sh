@@ -487,9 +487,9 @@ do_things() {
     if [ "$_kv_name" = "$_kv_latest" ]; then
         wget -c https://raw.githubusercontent.com/CachyOS/linux-cachyos/master/linux-cachyos/config -O .config
     elif [ "$_kv_name" = "$_kver_stable" ]; then
-        wget -c https://raw.githubusercontent.com/psygreg/linux-cachyos-deb/master/src/config -O .config
+        wget -c https://raw.githubusercontent.com/psygreg/linux-psycachy/master/src/config -O .config
     else
-        wget -c https://raw.githubusercontent.com/psygreg/linux-cachyos-deb/master/src/config-lts -O .config
+        wget -c https://raw.githubusercontent.com/psygreg/linux-psycachy/master/src/config-lts -O .config
     fi
 
     local _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}.${_mid}"
@@ -551,8 +551,7 @@ do_things() {
     # Additional patches to 6.12 LTS
     if [ "$_kv_name" = "$_kver_lts" ]; then
         patches+=("${_patchsource}/0005-ntsync.patch"
-            "${_patchsource}/0006-perf-per-core.patch"
-            "${_patchsource}/0008-zstd.patch")
+            "${_patchsource}/0007-zstd.patch")
     fi
 
     # Add ASUS to psycachy ## check EVERY RELEASE
@@ -867,7 +866,7 @@ _kv_name=$_kver_stable
 _kv_url=$_kv_url_stable
 
 # source linuxtoys lib -- fix when LT5 is out!
-source <(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/main/src/linuxtoys.lib)
+source <(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/master/p3/libs/linuxtoys.lib)
 
 # check if any argument was passed
 
