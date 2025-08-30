@@ -827,7 +827,7 @@ kernel_upd () {
 # build only
 builder () {
 
-    source <(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/main/src/linuxtoys.lib)
+    source <(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/master/p3/libs/linuxtoys.lib)
     _bdir="$(pwd)"
     if [ -n "$_bdir" ]; then
         if [ -d "$_bdir" ]; then

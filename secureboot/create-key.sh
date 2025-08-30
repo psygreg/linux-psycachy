@@ -13,7 +13,7 @@ mok_creator () {
     mkdir -p $HOME/.sb
     sleep 1
     cd $HOME/.sb
-    wget https://raw.githubusercontent.com/psygreg/linux-cachyos-deb/master/secureboot/mokconfig.cnf || { echo "Download failed"; exit 1; }
+    wget https://raw.githubusercontent.com/psygreg/linux-psycachy/master/secureboot/mokconfig.cnf || { echo "Download failed"; exit 1; }
     # create MOK keypair
     openssl req -config ./mokconfig.cnf \
             -new -x509 -newkey rsa:2048 \
@@ -59,7 +59,7 @@ signing () {
 }
 
 # runtime -- FIX SOURCE WHEN LT5 IS OUT!!
-source <(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/main/src/linuxtoys.lib) || { echo "Unable to source lib."; exit 2; }
+source <(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/master/p3/libs/linuxtoys.lib) || { echo "Unable to source lib."; exit 2; }
 depcheck
 # version checkers
 releases=$(curl -s "https://api.github.com/repos/psygreg/linux-psycachy/releases")

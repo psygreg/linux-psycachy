@@ -1,5 +1,6 @@
 #!/bin/bash
 _cfgsource="https://raw.githubusercontent.com/CachyOS/CachyOS-Settings/master/usr"
+cd $HOME
 mkdir -p sysctl-config
 sleep 1
 cd sysctl-config
