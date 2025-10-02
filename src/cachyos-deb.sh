@@ -11,7 +11,6 @@ _numa="enable"
 _hugepage="always"
 _lru_config="standard"
 _o3_optimization="yes"
-_os_optimization="no"
 _performance_governor="no"
 _nr_cpus="320"
 _bbr3="yes"
@@ -467,11 +466,11 @@ EOF
 do_things() {
 
     # create btrfs snapshot if functionality available
-    if [ "$(findmnt -n -o FSTYPE /)" = "btrfs" ]; then
-        if command -v snapper &> /dev/null; then
-            snapper -c root create -c pre --description kernel update
-        fi
-    fi
+    #if [ "$(findmnt -n -o FSTYPE /)" = "btrfs" ]; then
+    #    if command -v snapper &> /dev/null; then
+    #        snapper -c root create -c pre --description kernel update
+    #    fi
+    #fi
 
     # define _major as the first two digits of the kernel version
     _major=$(echo $_kv_name | grep -oP '^\K[^\.]+')
@@ -491,9 +490,9 @@ do_things() {
     if [ "$_kv_name" = "$_kv_latest" ]; then
         wget -c https://raw.githubusercontent.com/CachyOS/linux-cachyos/master/linux-cachyos/config -O .config
     elif [ "$_kv_name" = "$_kver_stable" ]; then
-        wget -c https://raw.githubusercontent.com/psygreg/linux-psycachy/master/src/config -O .config
+        wget -c https://raw.githubusercontent.com/psygreg/linux-psycachy/master/src/gcc/config-lts -O .config
     else
-        wget -c https://raw.githubusercontent.com/psygreg/linux-psycachy/master/src/config-lts -O .config
+        wget -c https://raw.githubusercontent.com/psygreg/linux-psycachy/master/src/gcc/config-lts -O .config
     fi
 
     local _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}.${_mid}"
