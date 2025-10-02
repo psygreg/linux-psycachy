@@ -491,7 +491,7 @@ do_things() {
     if [ "$_kv_name" = "$_kv_latest" ]; then
         wget -c https://raw.githubusercontent.com/CachyOS/linux-cachyos/master/linux-cachyos/config -O .config
     elif [ "$_kv_name" = "$_kver_stable" ]; then
-        wget -c https://raw.githubusercontent.com/psygreg/linux-psycachy/master/src/gcc/config-lts -O .config
+        wget -c https://raw.githubusercontent.com/psygreg/linux-psycachy/master/src/gcc/config -O .config
     else
         wget -c https://raw.githubusercontent.com/psygreg/linux-psycachy/master/src/gcc/config-lts -O .config
     fi
