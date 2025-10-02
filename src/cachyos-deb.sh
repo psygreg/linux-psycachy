@@ -10,7 +10,7 @@ _tick_rate="1000"
 _numa="enable"
 _hugepage="always"
 _lru_config="standard"
-_o3_optimization="no"
+_o3_optimization="yes"
 _os_optimization="no"
 _performance_governor="no"
 _nr_cpus="320"
@@ -523,7 +523,7 @@ do_things() {
     # Add BBR3 ## check EVERY RELEASE
     if [ "$_bbr3" == "yes" ]; then
         if [ "$_kv_name" = "$_kver_stable" ]; then
-            patches+=("${_patchsource}/0003-bbr3.patch")
+            patches+=("${_patchsource}/0002-bbr3.patch")
         elif [ "$_kv_name" = "$_kver_lts" ]; then
             patches+=("${_patchsource}/0002-bbr3.patch")
         fi
@@ -533,9 +533,7 @@ do_things() {
     if [ -z "$_is_generic" ]; then
         local CPU_VENDOR=$(grep -m1 'vendor_id' /proc/cpuinfo)
         if echo "$CPU_VENDOR" | grep -q "AuthenticAMD"; then
-            if [ "$_kv_name" = "$_kver_stable" ]; then
-                patches+=("${_patchsource}/0001-amd-pstate.patch")
-            elif [ "$_kv_name" = "$_kver_lts" ]; then
+            if [ "$_kv_name" = "$_kver_lts" ]; then
                 patches+=("${_patchsource}/0001-amd-cache-optimizer.patch")
             fi
         fi
@@ -560,8 +558,8 @@ do_things() {
 
     # Add ASUS to psycachy ## check EVERY RELEASE
     if [ "$_kv_name" = "$_kver_stable" ]; then
-        if curl --silent --head --fail "${_patchsource}/0002-asus.patch" > /dev/null; then
-            patches+=("${_patchsource}/0002-asus.patch")
+        if curl --silent --head --fail "${_patchsource}/0001-asus.patch" > /dev/null; then
+            patches+=("${_patchsource}/0001-asus.patch")
         fi
     fi
 
@@ -857,12 +855,12 @@ _kv_latest=$(basename $_kv_latest .tar.xz)
 
 # initialize variables for stable kernel
 _kver_stable_ref="6"
-_kver_stable="6.15.10"
+_kver_stable="6.16.10"
 _kv_url_stable="https://cdn.kernel.org/pub/linux/kernel/v${_kver_stable_ref}.x/linux-${_kver_stable}.tar.xz"
 
 # initialize variables for LTS kernel
 _kver_lts_ref="6"
-_kver_lts="6.12.47"
+_kver_lts="6.12.50"
 _kv_url_lts="https://cdn.kernel.org/pub/linux/kernel/v${_kver_lts_ref}.x/linux-${_kver_lts}.tar.xz"
 
 # set default kernel setting to stable
