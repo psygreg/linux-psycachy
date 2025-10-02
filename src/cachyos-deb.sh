@@ -564,7 +564,7 @@ do_things() {
     fi
 
     # improve compatibility with dkms modules
-    patches+=("${_patchsource}/misc/dkms-clang.patch")
+    # patches+=("${_patchsource}/misc/dkms-clang.patch")
     # enable ACPI calls for modules
     patches+=("${_patchsource}/misc/0001-acpi-call.patch")
 
