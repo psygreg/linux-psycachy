@@ -45,7 +45,7 @@ export NEWT_COLORS='
 check_deps() {
 
     # List of dependencies to check
-    local _packages=(whiptail libdw-dev gcc git libncurses-dev curl gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf make llvm rustc rust-llvm bc rsync clang python-is-python3 perl gettext cpio pahole lld debhelper dwarves zstd)
+    local _packages=(whiptail libdw-dev gcc git libncurses-dev curl gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf make rustc bc rsync python-is-python3 perl gettext cpio pahole debhelper dwarves zstd)
 
     # Iterate over dependencies and check each one
     _install_
@@ -860,7 +860,7 @@ _kv_url_stable="https://cdn.kernel.org/pub/linux/kernel/v${_kver_stable_ref}.x/l
 
 # initialize variables for LTS kernel
 _kver_lts_ref="6"
-_kver_lts="6.12.50"
+_kver_lts="6.12.54"
 _kv_url_lts="https://cdn.kernel.org/pub/linux/kernel/v${_kver_lts_ref}.x/linux-${_kver_lts}.tar.xz"
 
 # set default kernel setting to stable
