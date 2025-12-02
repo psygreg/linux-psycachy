@@ -529,16 +529,6 @@ do_things() {
         fi
     fi
 
-    # Implement AMD Pstates ## check EVERY RELEASE
-    if [ -z "$_is_generic" ]; then
-        local CPU_VENDOR=$(grep -m1 'vendor_id' /proc/cpuinfo)
-        if echo "$CPU_VENDOR" | grep -q "AuthenticAMD"; then
-            if [ "$_kv_name" = "$_kver_lts" ]; then
-                patches+=("${_patchsource}/0001-amd-cache-optimizer.patch")
-            fi
-        fi
-    fi
-
     # Add fixes ## check EVERY RELEASE
     if [ "$_kv_name" = "$_kver_stable" ]; then
         if curl --silent --head --fail "${_patchsource}/0005-fixes.patch" > /dev/null; then
@@ -553,7 +543,15 @@ do_things() {
     # Additional patches to 6.12 LTS
     if [ "$_kv_name" = "$_kver_lts" ]; then
         patches+=("${_patchsource}/0005-ntsync.patch"
-            "${_patchsource}/0007-zstd.patch")
+            "${_patchsource}/0007-zstd.patch"
+            "${_patchsource}/0003-cachy.patch"
+            "${_patchsource}/0001-amd-cache-optimizer.patch")
+    fi
+
+    # Additional patches to stable
+    if [ "$_kv_name" = "$_kver_stable" ]; then
+        patches+=("${_patchsource}/0003-block.patch"
+            "${_patchsource}/0004-cachy.patch")
     fi
 
     # Add ASUS to psycachy ## check EVERY RELEASE
@@ -855,12 +853,12 @@ _kv_latest=$(basename $_kv_latest .tar.xz)
 
 # initialize variables for stable kernel
 _kver_stable_ref="6"
-_kver_stable="6.16.10"
+_kver_stable="6.17.10"
 _kv_url_stable="https://cdn.kernel.org/pub/linux/kernel/v${_kver_stable_ref}.x/linux-${_kver_stable}.tar.xz"
 
 # initialize variables for LTS kernel
 _kver_lts_ref="6"
-_kver_lts="6.12.58"
+_kver_lts="6.12.60"
 _kv_url_lts="https://cdn.kernel.org/pub/linux/kernel/v${_kver_lts_ref}.x/linux-${_kver_lts}.tar.xz"
 
 # set default kernel setting to stable
