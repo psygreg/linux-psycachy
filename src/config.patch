@@ -1,0 +1,13 @@
+diff --git a/scripts/package/builddeb b/scripts/package/builddeb
+index 3627ca2..98b43d2 100755
+--- a/scripts/package/builddeb
++++ b/scripts/package/builddeb
+@@ -140,6 +140,8 @@ install_kernel_headers () {
+ 	version=${1#linux-headers-}
+ 
+ 	CC="${DEB_HOST_GNU_TYPE}-gcc" "${srctree}/scripts/package/install-extmod-build" "${pdir}/usr/src/linux-headers-${version}"
++	# Copy the real .config file into the headers build directory
++	cp -p "${KCONFIG_CONFIG:-$srctree/.config}" "${pdir}/usr/src/linux-headers-${version}/.config"
+ 
+ 	mkdir -p $pdir/lib/modules/$version/
+ 	ln -s /usr/src/linux-headers-$version $pdir/lib/modules/$version/build

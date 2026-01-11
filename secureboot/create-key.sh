@@ -89,6 +89,9 @@ if [ -n "$1" ]; then
     --lts)
         kver_sign="$ver_psy_lts" && signing
         ;;
+    --ubuntu | -u)
+    	kver_sign="6.14.11-psycachy" && signing
+    	;;
     esac
 fi
 
