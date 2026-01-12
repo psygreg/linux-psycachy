@@ -24,7 +24,7 @@ cd sysctl-config
     echo "${_cfgsource}/lib/modprobe.d/nvidia.conf"
     } > "modprobe.txt"
 {
-    echo "${_cfgsource}/lib/sysctl.d/99-cachyos-settings.conf"
+    echo "${_cfgsource}/lib/sysctl.d/70-cachyos-settings.conf"
     echo "${_cfgsource}/lib/systemd/journald.conf.d/00-journal-size.conf"
     echo "${_cfgsource}/share/X11/xorg.conf.d/20-touchpad.conf"
     } > "other.txt"
