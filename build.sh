@@ -1,4 +1,4 @@
-#!/bin/
+#!/bin/bash
 
 # dependency handling
 dep_miss=()
