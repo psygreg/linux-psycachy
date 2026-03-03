@@ -688,7 +688,7 @@ install_f () {
     fi
 
     # Install compiled kernel
-    sudo dpkg -i ${_bdir}/linux-image-${_kedition}_${KERNEL_VERSION}_amd64.deb ${_bdir}/linux-headers-${_kedition}_${KERNEL_VERSION}_amd64.deb ${_bdir}/linux-libc-dev-${KERNEL_VERSION}_${KERNEL_VERSION}_amd64.deb
+    sudo dpkg -i ${build_dir}/linux-image-${_kedition}_${KERNEL_VERSION}_amd64.deb ${build_dir}/linux-headers-${_kedition}_${KERNEL_VERSION}_amd64.deb ${build_dir}/linux-libc-dev-${KERNEL_VERSION}_${KERNEL_VERSION}_amd64.deb
     # sign it if Secure Boot is enabled
     if sudo mokutil --sb-state | grep -q "SecureBoot enabled"; then
         bash <(curl -s https://raw.githubusercontent.com/psygreg/linux-cachyos-deb/refs/heads/master/secureboot/create-key.sh)
