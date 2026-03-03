@@ -37,7 +37,7 @@ sleep 1
 sudo cp -rf udev/* /usr/lib/udev/rules.d/
 sudo cp -rf tmpfiles/* /usr/lib/tmpfiles.d/
 sudo cp -rf modprobe/* /usr/lib/modprobe.d/
-sudo cp -f 99-cachyos-settings.conf /usr/lib/sysctl.d/
+sudo cp -f 70-cachyos-settings.conf /usr/lib/sysctl.d/
 sudo cp -f 00-journal-size.conf /usr/lib/systemd/journald.conf.d/
 sudo cp -f 20-touchpad.conf /usr/share/X11/xorg.conf.d/
 cd ..
