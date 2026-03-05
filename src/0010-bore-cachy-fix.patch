@@ -1,0 +1,28 @@
+From: Your Name <your.email@example.com>
+Date: Tue, 11 Nov 2025 22:53:18 +0100
+Subject: [PATCH] bore-cachy: add missing variable declarations for compilation fix
+
+Add the necessary variable declarations (sysctl_sched_min_base_slice and
+nsecs_per_tick) to fix kernel compilation issues with the BORE scheduler.
+
+Signed-off-by: Your Name <your.email@example.com>
+---
+ kernel/sched/core.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 1234567..abcdefg 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -206,8 +206,11 @@ static inline void update_load_set(struct load_weight *lw, unsigned long w)
+  *
+  * This idea comes from the SD scheduler of Con Kolivas:
+  */
+ #ifdef CONFIG_SCHED_BORE
++unsigned int sysctl_sched_min_base_slice = CONFIG_MIN_BASE_SLICE_NS;
+ static void update_sysctl(void) {
++	const unsigned int nsecs_per_tick = 1000000000ULL / HZ;
+ 	sysctl_sched_base_slice = nsecs_per_tick *
+ 		max(1UL, DIV_ROUND_UP(sysctl_sched_min_base_slice, nsecs_per_tick));
+ }
+ void sched_update_min_base_slice(void) { update_sysctl(); }
