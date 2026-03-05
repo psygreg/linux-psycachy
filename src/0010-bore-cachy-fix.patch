@@ -1,11 +1,11 @@
-From: Your Name <your.email@example.com>
+From: Psygreg <psygreg@pm.me>
 Date: Tue, 11 Nov 2025 22:53:18 +0100
 Subject: [PATCH] bore-cachy: add missing variable declarations for compilation fix
 
 Add the necessary variable declarations (sysctl_sched_min_base_slice and
 nsecs_per_tick) to fix kernel compilation issues with the BORE scheduler.
 
-Signed-off-by: Your Name <your.email@example.com>
+Signed-off-by: Psygreg <psygreg@pm.me>
 ---
  kernel/sched/core.c | 3 +++
  1 file changed, 3 insertions(+)
