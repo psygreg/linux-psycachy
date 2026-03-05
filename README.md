@@ -1,7 +1,7 @@
 # PsyCachy Kernel
 
 ## For those on GitHub
-This is a mirror of the [Codeberg repository](https://codeberg.org/psygreg/linux-psycachy) in which this project is active. If you wish to contribute, consider heading there instead to be credited in the contributors.
+This is a mirror of the [official repository](https://git.linux.toys/psygreg/linux-psycachy) in which this project is active. If you wish to contribute, consider heading there instead to be credited in the contributors.
 
 This repository contains the releases of the `linux-psycachy` and `linux-psycachy-lts` kernels, and the script for building it. The script may automate the process of configuring and optimizing the kernel build according to your hardware and preferences.
 
@@ -13,7 +13,7 @@ PsyCachy is a kernel with improved settings for compatibility and stability acro
 - OS/-o2 optimization instead of -o3, which caused quite a few problems with Debian/Ubuntu packages.
 
 # Recommended usage
-Install the kernel image of your choice from [Releases](https://codeberg.org/psygreg/linux-psycachy/releases) or through [LinuxToys](https://codeberg.org/psygreg/linuxtoys). 
+Install the kernel image of your choice from [Releases](https://github.com/psygreg/linux-psycachy/releases) or through [LinuxToys](https://git.linux.toys/psygreg/linuxtoys). 
 ### Choosing your kernel
 - `linux-psycachy` is more up-to-date on features, and follows a predictable release schedule of about every two months, enough time for each kernel release to mature enough to be unproblematic.
 - `linux-psycachy-lts` offers a more stable and secure choice, following upstream releases of the latest version marked as ***longterm*** from [The Linux Kernel Archives](https://kernel.org/).
