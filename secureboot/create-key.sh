@@ -1,12 +1,15 @@
 #!/bin/bash
 # dependency check
 depcheck () {
+
     local _packages=(mokutil sbsigntool wget curl openssl)
     _install_
+
 }
 
 # create MOK
 mok_creator () {
+
     mkdir -p $HOME/.sb
     sleep 1
     cd $HOME/.sb
@@ -14,7 +17,7 @@ mok_creator () {
     # create MOK keypair
     openssl req -config ./mokconfig.cnf \
             -new -x509 -newkey rsa:2048 \
-            -nodes -days 3650 -outform DER \
+            -nodes -days 36500 -outform DER \
             -keyout "MOK.priv" \
             -out "MOK.der"
     # create PEM
@@ -22,10 +25,12 @@ mok_creator () {
     # enroll MOK
     whiptail --title "MOK" --msgbox "Your Machine Owner Key will be imported to Secure Boot now. It will require you to create a password. Make sure it is stored somewhere safe!" 12 78
     sudo mokutil --import MOK.der
+
 }
 
 # sign kernel
 sign_upd () {
+
     local kernel_path="/boot/vmlinuz-${kver_sign}"
     [[ -f "$kernel_path" ]] || { echo "Kernel not found: $kernel_path"; exit 3; }
     sudo sbsign --key MOK.priv --cert MOK.pem /boot/vmlinuz-${kver_sign} --output /boot/vmlinuz-${kver_sign}.signed
@@ -35,33 +40,14 @@ sign_upd () {
     sudo mv /boot/initrd.img-${kver_sign}{.signed,}
     sleep 1
     sudo update-grub
-}
 
-# Ubuntu signing check
-ubuntu_signing () {
-    local ubuntu_versions=($(echo "$releases" | jq -r '.[].tag_name' | grep -i '^Ubuntu-' | sed 's/^Ubuntu-//' | sort -Vr))
-    for ver in "${ubuntu_versions[@]}"; do
-        if [[ -f "/boot/vmlinuz-${ver}-psycachy" ]]; then
-            kver_sign="${ver}-psycachy"
-            signing
-        fi
-    done
-    echo "No matching Ubuntu PsyCachy kernels found in /boot."
-    exit 1
 }
 
 # run proper iteration
 signing () {
+
     if [[ -f $HOME/.sb/MOK.pem ]]; then
         cd $HOME/.sb
-        # check if key is less than 7 months from expiring
-        local expiry_date=$(openssl x509 -enddate -noout -in MOK.pem | cut -d= -f2)
-        local expiry_epoch=$(date -d "$expiry_date" +%s)
-        local threshold_epoch=$(date -d "+7 months" +%s)
-        if [[ $expiry_epoch -lt $threshold_epoch ]]; then
-            whiptail --title "MOK Expiry" --msgbox "Your Machine Owner Key is expiring soon (less than 7 months). A new key will be generated and enrolled." 12 78
-            mok_creator
-        fi
         sign_upd
         exit 0
     else
@@ -69,6 +55,7 @@ signing () {
         sign_upd
         exit 0
     fi
+
 }
 
 # runtime
@@ -103,17 +90,17 @@ if [ -n "$1" ]; then
         kver_sign="$ver_psy_lts" && signing
         ;;
     --ubuntu | -u)
-        ubuntu_signing
-        ;;
+    	kver_sign="6.14.11-psycachy" && signing
+    	;;
     esac
 fi
 
 # menu
 while :; do
+
     CHOICE=$(whiptail --title "Secure Boot" --menu "Select your kernel edition:" 25 78 16 \
         "PsyCachy" "$kver_psycachy" \
         "PsyCachy-LTS" "$kver_lts" \
-        "PsyCachy for Ubuntu" "DKMS-supported" \
         "CachyOS" "Latest" \
         "Cancel" "" 3>&1 1>&2 2>&3)
 
@@ -121,14 +108,14 @@ while :; do
     if [ $exitstatus != 0 ]; then
         # Exit the script if the user presses Esc
         break
-    fi
+     fi
 
     case $CHOICE in
     PsyCachy) kver_sign="$ver_psy" && signing;;
     PsyCachy-LTS) kver_sign="$ver_psy_lts" && signing;;
-    "PsyCachy for Ubuntu") ubuntu_signing;;
     CachyOS) kver_sign="$ver_cachy" && signing;;
     Cancel | q) break ;;
     *) echo "Invalid Option" ;;
     esac
+
 done
