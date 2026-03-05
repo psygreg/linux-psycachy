@@ -33,7 +33,7 @@ Before running the script, ensure you have the following prerequisites installed
 - `curl`: For fetching the latest kernel version.
 - `devscripts` and `debhelper`: For packaging.
 
-You can install these dependencies using your distribution's package manager, or have the build scripts install them for you.
+You can install these dependencies using your distribution's package manager, or have the build scripts install them for you. It is advisable to use Ubuntu LTS or Debian Stable for building to ensure better compatibility. You can use a `docker`, `podman` or `distrobox` container for that.
 
 ## Features
 The builder in `proto` offers a variety of configuration options:
