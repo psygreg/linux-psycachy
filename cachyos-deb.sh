@@ -820,7 +820,6 @@ kernel_upd () {
 # build only
 builder () {
 
-    source <(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/master/p3/libs/linuxtoys.lib)
     _bdir="$(pwd)"
     if [ -n "$_bdir" ]; then
         if [ -d "$_bdir" ]; then
@@ -852,9 +851,6 @@ _kv_url_lts="https://cdn.kernel.org/pub/linux/kernel/v${_kver_lts_ref}.x/linux-$
 # set default kernel setting to lts
 _kv_name=$_kver_lts
 _kv_url=$_kv_url_lts
-
-# source linuxtoys lib
-source <(curl -s https://raw.githubusercontent.com/psygreg/linuxtoys/refs/heads/master/p3/libs/linuxtoys.lib)
 
 # check if any argument was passed
 
