@@ -1,9 +1,6 @@
 # PsyCachy Kernel
 This repository contains the releases of the `linux-psycachy` kernel, and the script for building that and custom variants. The script may automate the process of configuring and optimizing the kernel build according to your hardware and preferences.
 
-## For those on GitHub
-This is a mirror of the [official repository](https://git.linux.toys/psygreg/linux-psycachy) in which this project is active. If you wish to contribute, consider heading there instead to be credited in the contributors.
-
 # What's this about?
 PsyCachy is a kernel with improved settings for compatibility and stability across Debian/Ubuntu Linux distributions derived from linux-cachyos. Releases are made targeting Ubuntu rolling and LTS with *dkms* module compatibility, since it's the most widely used version, but you are free to build it for other kernel versions and distributions for yourself like Debian using the `proto` branch.
 ### Differences to `linux-cachyos`
