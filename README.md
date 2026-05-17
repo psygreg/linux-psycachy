@@ -10,13 +10,13 @@ PsyCachy is a kernel with improved settings for compatibility and stability acro
 - ~~OS/-o2 optimization instead of -o3, which caused quite a few problems with Debian/Ubuntu packages.~~ Now it builds -o3 by default, fixed.
 
 # Recommended usage (for most people)
-Install the kernel image of your choice from [Releases](https://github.com/psygreg/linux-psycachy/releases) or through [LinuxToys](https://git.linux.toys/psygreg/linuxtoys). 
+Install the kernel image of your choice from [Releases](https://github.com/psygreg/linux-psycachy/releases). 
 
 ## Manual installation
 - Download **all three** .deb packages
 - Open terminal in the same directory of the packages
 - `sudo dpkg -i linux-image-psycachy_6.14.11-1_amd64.deb linux-headers-psycachy_6.14.11-1_amd64.deb linux-libc-dev_6.14.11-1_amd64.deb`, replacing 6.14.11 with your package version
-- To install CachyOS SystemD configuration files as well to maximize effectiveness, download and run `cachyconfs.sh` available from *Releases* or [LinuxToys](https://git.linux.toys/psygreg/linuxtoys).
+- To install CachyOS SystemD configuration files as well to maximize effectiveness, download and run `cachyconfs.sh` available [from source](https://github.com/psygreg/linux-psycachy/blob/master/src/cachyconfs.sh).
 
 ## Secure Boot
 You can make the kernel compatible with Secure Boot by signing it using `create-key.sh` available from *Releases*. Remember to store the password you set when the keypair is created carefully as it will be required to import the MOK into BIOS.
