@@ -1,3 +1,7 @@
+# ARCHIVED
+
+As of June 9th, 2026, this project has been archived as I no longer have the time to commit to it as my focus has been on LinuxToys. Feel free to fork it if you wish to continue it, and I'll be happy to help in any way I can. Below this message is the old readme.
+
 # PsyCachy Kernel
 This repository contains the releases of the `linux-psycachy` kernel, and the script for building that and custom variants. The script may automate the process of configuring and optimizing the kernel build according to your hardware and preferences.
 
@@ -10,7 +14,7 @@ PsyCachy is a kernel with improved settings for compatibility and stability acro
 - ~~OS/-o2 optimization instead of -o3, which caused quite a few problems with Debian/Ubuntu packages.~~ Now it builds -o3 by default, fixed.
 
 # Recommended usage (for most people)
-Install the kernel image of your choice from [Releases](https://github.com/psygreg/linux-psycachy/releases) or through [LinuxToys](https://git.linux.toys/psygreg/linuxtoys). 
+Install the kernel image of your choice from [Releases](https://github.com/psygreg/linux-psycachy/releases) or through [LinuxToys](https://github.com/psygreg/linuxtoys). 
 
 ## Manual installation
 - Download **all three** .deb packages
